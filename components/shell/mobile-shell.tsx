@@ -16,6 +16,11 @@ const navItems = [
     testId: "nav-home",
   },
   {
+    href: "/library",
+    label: "Library",
+    testId: "nav-library",
+  },
+  {
     href: "/templates",
     label: "Templates",
     testId: "nav-templates",
@@ -74,7 +79,7 @@ export function MobileShell({ children }: MobileShellProps) {
             position: "sticky",
             bottom: "max(0.85rem, env(safe-area-inset-bottom))",
             display: "grid",
-            gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+            gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
             gap: "0.75rem",
             padding: "0.8rem",
             borderRadius: "1.5rem",
