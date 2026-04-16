@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: in_progress
-stopped_at: Completed 01-02-PLAN.md
-last_updated: "2026-04-16T15:25:33.557Z"
-last_activity: 2026-04-16 - Completed 01-02 auth bootstrap and session persistence.
+status: completed
+stopped_at: Completed 01-01-PLAN.md
+last_updated: "2026-04-16T15:50:50.947Z"
+last_activity: 2026-04-16 - Completed 01-01 mobile shell, auth-aware home split, and shell-vs-run route coverage.
 progress:
   total_phases: 5
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 3
-  completed_plans: 2
-  percent: 67
+  completed_plans: 3
+  percent: 100
 ---
 
 # Project State
@@ -21,32 +21,32 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-15)
 
 **Core value:** Users can quickly create or open a structured workout timer and run it reliably from across the room with clear visual, audio, and haptic transitions.
-**Current focus:** Phase 1 - Foundation, Access, and Data Boundaries
+**Current focus:** Phase 1 complete - ready to begin Phase 2 (Authoring, Library CRUD, and Drafts)
 
 ## Current Position
 
 Phase: 1 of 5 (Foundation, Access, and Data Boundaries)
-Plan: 2 of 3 in current phase
-Status: In progress
-Last activity: 2026-04-16 - Completed 01-02 auth bootstrap and session persistence.
+Plan: 3 of 3 in current phase
+Status: Complete
+Last activity: 2026-04-16 - Completed 01-01 mobile shell, auth-aware home split, and shell-vs-run route coverage.
 
-Progress: [#######---] 67%
+Progress: [##########] 100%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 2
-- Average duration: 11.5 min
-- Total execution time: 0.4 hours
+- Total plans completed: 3
+- Average duration: 13.7 min
+- Total execution time: 0.7 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01 | 2 | 23 min | 11.5 min |
+| 01 | 3 | 41 min | 13.7 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-03 (4 min), 01-02 (19 min)
+- Last 5 plans: 01-01 (18 min), 01-03 (4 min), 01-02 (19 min)
 - Trend: Stable
 
 ## Accumulated Context
@@ -65,6 +65,9 @@ Recent decisions affecting current work:
 - [Phase 01]: Resolve guest versus signed-in shell state on the server first so refreshes restore identity context without depending on client-only session memory.
 - [Phase 01]: Bootstrap a minimal profile row for first-name display while keeping authorization anchored to Supabase identity and RLS contracts.
 - [Phase 01]: Keep auth smoke tests runnable in automation through a guarded mock callback/session path before the full shell experience is built.
+- [Phase 01]: Use a dedicated (shell) route group so home and templates keep shared chrome while /run stays isolated for future playback.
+- [Phase 01]: Resolve guest versus signed-in home differences through one server-rendered view-model instead of separate page trees.
+- [Phase 01]: Keep official template previews visible in auth test mode and without live data so Phase 1 shell smoke remains representative.
 
 ### Pending Todos
 
@@ -76,6 +79,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-16T15:25:33.557Z
-Stopped at: Completed 01-02-PLAN.md
+Last session: 2026-04-16T15:48:26.797Z
+Stopped at: Completed 01-01-PLAN.md
 Resume file: None

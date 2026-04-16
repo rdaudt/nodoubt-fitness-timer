@@ -10,7 +10,7 @@ This roadmap moves No Doubt Fitness Timer from a documentation-first repo to a b
 - Integer phases (1, 2, 3): Planned milestone work
 - Decimal phases (2.1, 2.2): Urgent insertions (marked with INSERTED)
 
-- [ ] **Phase 1: Foundation, Access, and Data Boundaries** - Establish the mobile shell, guest/signed-in entry states, Google auth, and private timer ownership rules.
+- [x] **Phase 1: Foundation, Access, and Data Boundaries** - Establish the mobile shell, guest/signed-in entry states, Google auth, and private timer ownership rules.
 - [ ] **Phase 2: Authoring, Library CRUD, and Drafts** - Deliver timer creation, editing, duplication, detail review, and reusable personal-library workflows.
 - [ ] **Phase 3: Deterministic Run Engine and Playback** - Make timers trustworthy to run from across the room with deterministic timing and device feedback.
 - [ ] **Phase 4: Offline Resilience and PWA Delivery** - Add installability and constrained offline playback for previously loaded timers.
@@ -29,7 +29,7 @@ This roadmap moves No Doubt Fitness Timer from a documentation-first repo to a b
 **Plans**: 3 plans
 
 Plans:
-- [ ] 01-01: Build the mobile app shell, route structure, and guest/signed-in home split.
+- [x] 01-01: Build the mobile app shell, route structure, and guest/signed-in home split.
 - [x] 01-02: Implement Supabase Google auth bootstrap, session persistence, and signed-in identity context.
 - [x] 01-03: Freeze the initial timer/template data model and private ownership boundary with RLS-aware persistence scaffolding.
 
@@ -103,7 +103,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation, Access, and Data Boundaries | 2/3 | In Progress | - |
+| 1. Foundation, Access, and Data Boundaries | 3/3 | Complete    | 2026-04-16 |
 | 2. Authoring, Library CRUD, and Drafts | 0/3 | Not started | - |
 | 3. Deterministic Run Engine and Playback | 0/3 | Not started | - |
 | 4. Offline Resilience and PWA Delivery | 0/2 | Not started | - |

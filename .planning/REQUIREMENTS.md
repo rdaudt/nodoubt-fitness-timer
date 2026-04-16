@@ -21,13 +21,13 @@
 - [ ] **LIBR-04**: Signed-in user can duplicate a personal timer as a new personal timer.
 - [ ] **LIBR-05**: Signed-in user can delete a personal timer with confirmation.
 - [ ] **LIBR-06**: Signed-in user can see draft timers clearly labeled in the main timer library.
-- [ ] **LIBR-07**: Guest user home prioritizes official NoDoubt Fitness templates instead of an empty personal-library state.
-- [ ] **LIBR-08**: Signed-in user home shows `My Timers` first and official templates in a separate section.
+- [x] **LIBR-07**: Guest user home prioritizes official NoDoubt Fitness templates instead of an empty personal-library state.
+- [x] **LIBR-08**: Signed-in user home shows `My Timers` first and official templates in a separate section.
 - [ ] **LIBR-09**: User can start a timer directly from an explicit `Run now` action on home or library cards while card review remains available through the detail flow.
 
 ### Official Templates
 
-- [ ] **TMPL-01**: Guest and signed-in users can browse official NoDoubt Fitness starter templates.
+- [x] **TMPL-01**: Guest and signed-in users can browse official NoDoubt Fitness starter templates.
 - [ ] **TMPL-02**: User can open an official template detail screen and review its interval breakdown before running it.
 - [ ] **TMPL-03**: User can run an official template immediately without editing it.
 - [ ] **TMPL-04**: User can duplicate an official template into a personal timer before editing it.
@@ -168,10 +168,10 @@
 | LIBR-04 | Phase 2 | Pending |
 | LIBR-05 | Phase 2 | Pending |
 | LIBR-06 | Phase 2 | Pending |
-| LIBR-07 | Phase 1 | Pending |
-| LIBR-08 | Phase 1 | Pending |
+| LIBR-07 | Phase 1 | Complete |
+| LIBR-08 | Phase 1 | Complete |
 | LIBR-09 | Phase 3 | Pending |
-| TMPL-01 | Phase 1 | Pending |
+| TMPL-01 | Phase 1 | Complete |
 | TMPL-02 | Phase 2 | Pending |
 | TMPL-03 | Phase 3 | Pending |
 | TMPL-04 | Phase 2 | Pending |
@@ -237,4 +237,4 @@
 
 ---
 *Requirements defined: 2026-04-15*
-*Last updated: 2026-04-15 after roadmap creation*
+*Last updated: 2026-04-16 after Phase 1 completion updates*
