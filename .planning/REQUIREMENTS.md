@@ -98,7 +98,7 @@
 - [ ] **BRND-01**: User experiences the app as an official NoDoubt Fitness product through the shell, onboarding, templates, and supporting surfaces.
 - [ ] **BRND-02**: Branding recedes during active run mode so workout readability remains primary.
 - [ ] **BRND-03**: User sees lightweight NoDoubt Fitness coaching / Instagram CTAs on non-critical surfaces such as home and completion without interrupting workout flow.
-- [ ] **PRIV-01**: Authenticated user can access only their own private timers and drafts.
+- [x] **PRIV-01**: Authenticated user can access only their own private timers and drafts.
 - [ ] **ANLY-01**: The product records basic analytics for sign-ins, timer starts, timer completions, official template usage, and coaching / Instagram CTA clicks.
 
 ### PWA & Resilience
@@ -224,7 +224,7 @@
 | BRND-01 | Phase 5 | Pending |
 | BRND-02 | Phase 3 | Pending |
 | BRND-03 | Phase 5 | Pending |
-| PRIV-01 | Phase 1 | Pending |
+| PRIV-01 | Phase 1 | Complete |
 | ANLY-01 | Phase 5 | Pending |
 | PWA-01 | Phase 4 | Pending |
 | PWA-02 | Phase 4 | Pending |

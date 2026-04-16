@@ -31,7 +31,7 @@ This roadmap moves No Doubt Fitness Timer from a documentation-first repo to a b
 Plans:
 - [ ] 01-01: Build the mobile app shell, route structure, and guest/signed-in home split.
 - [ ] 01-02: Implement Supabase Google auth bootstrap, session persistence, and signed-in identity context.
-- [ ] 01-03: Freeze the initial timer/template data model and private ownership boundary with RLS-aware persistence scaffolding.
+- [x] 01-03: Freeze the initial timer/template data model and private ownership boundary with RLS-aware persistence scaffolding.
 
 ### Phase 2: Authoring, Library CRUD, and Drafts
 **Goal**: Users can create, review, edit, save, and manage structured timers quickly on mobile, whether starting from scratch or duplicating an official template.
@@ -103,7 +103,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation, Access, and Data Boundaries | 0/3 | Not started | - |
+| 1. Foundation, Access, and Data Boundaries | 1/3 | In Progress | - |
 | 2. Authoring, Library CRUD, and Drafts | 0/3 | Not started | - |
 | 3. Deterministic Run Engine and Playback | 0/3 | Not started | - |
 | 4. Offline Resilience and PWA Delivery | 0/2 | Not started | - |
