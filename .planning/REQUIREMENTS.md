@@ -155,13 +155,86 @@
 
 ## Traceability
 
-To be populated during roadmap creation.
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| AUTH-01 | Phase 1 | Pending |
+| AUTH-02 | Phase 1 | Pending |
+| AUTH-03 | Phase 1 | Pending |
+| AUTH-04 | Phase 5 | Pending |
+| AUTH-05 | Phase 5 | Pending |
+| LIBR-01 | Phase 2 | Pending |
+| LIBR-02 | Phase 2 | Pending |
+| LIBR-03 | Phase 2 | Pending |
+| LIBR-04 | Phase 2 | Pending |
+| LIBR-05 | Phase 2 | Pending |
+| LIBR-06 | Phase 2 | Pending |
+| LIBR-07 | Phase 1 | Pending |
+| LIBR-08 | Phase 1 | Pending |
+| LIBR-09 | Phase 3 | Pending |
+| TMPL-01 | Phase 1 | Pending |
+| TMPL-02 | Phase 2 | Pending |
+| TMPL-03 | Phase 3 | Pending |
+| TMPL-04 | Phase 2 | Pending |
+| TMPL-05 | Phase 2 | Pending |
+| CRTE-01 | Phase 2 | Pending |
+| CRTE-02 | Phase 2 | Pending |
+| CRTE-03 | Phase 2 | Pending |
+| CRTE-04 | Phase 2 | Pending |
+| CRTE-05 | Phase 2 | Pending |
+| CRTE-06 | Phase 2 | Pending |
+| CRTE-07 | Phase 2 | Pending |
+| CRTE-08 | Phase 2 | Pending |
+| CRTE-09 | Phase 2 | Pending |
+| CRTE-10 | Phase 2 | Pending |
+| EDIT-01 | Phase 2 | Pending |
+| EDIT-02 | Phase 2 | Pending |
+| EDIT-03 | Phase 2 | Pending |
+| EDIT-04 | Phase 2 | Pending |
+| EDIT-05 | Phase 2 | Pending |
+| EDIT-06 | Phase 2 | Pending |
+| EDIT-07 | Phase 2 | Pending |
+| EDIT-08 | Phase 2 | Pending |
+| EDIT-09 | Phase 2 | Pending |
+| EDIT-10 | Phase 2 | Pending |
+| EDIT-11 | Phase 2 | Pending |
+| EDIT-12 | Phase 3 | Pending |
+| RUN-01 | Phase 3 | Pending |
+| RUN-02 | Phase 3 | Pending |
+| RUN-03 | Phase 3 | Pending |
+| RUN-04 | Phase 3 | Pending |
+| RUN-05 | Phase 3 | Pending |
+| RUN-06 | Phase 3 | Pending |
+| RUN-07 | Phase 3 | Pending |
+| RUN-08 | Phase 3 | Pending |
+| RUN-09 | Phase 3 | Pending |
+| RUN-10 | Phase 3 | Pending |
+| RUN-11 | Phase 3 | Pending |
+| RUN-12 | Phase 3 | Pending |
+| RUN-13 | Phase 3 | Pending |
+| ALRT-01 | Phase 3 | Pending |
+| ALRT-02 | Phase 3 | Pending |
+| ALRT-03 | Phase 3 | Pending |
+| ALRT-04 | Phase 3 | Pending |
+| ALRT-05 | Phase 3 | Pending |
+| SETG-01 | Phase 5 | Pending |
+| SETG-02 | Phase 1 | Pending |
+| SETG-03 | Phase 5 | Pending |
+| SETG-04 | Phase 5 | Pending |
+| SETG-05 | Phase 5 | Pending |
+| BRND-01 | Phase 5 | Pending |
+| BRND-02 | Phase 3 | Pending |
+| BRND-03 | Phase 5 | Pending |
+| PRIV-01 | Phase 1 | Pending |
+| ANLY-01 | Phase 5 | Pending |
+| PWA-01 | Phase 4 | Pending |
+| PWA-02 | Phase 4 | Pending |
+| PWA-03 | Phase 4 | Pending |
 
 **Coverage:**
-- v1 requirements: 67 total
-- Mapped to phases: 0
-- Unmapped: 67
+- v1 requirements: 72 total
+- Mapped to phases: 72
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-04-15*
-*Last updated: 2026-04-15 after initial definition*
+*Last updated: 2026-04-15 after roadmap creation*
