@@ -271,7 +271,7 @@ export default async function TimerDetailPage({
             Run
           </Link>
           <Link
-            href={`/timers/${id}?notice=${encodeURIComponent("Editor workflows land in Plan 02-03. This detail screen is the review boundary for now.")}`}
+            href={`/timers/${id}/edit`}
             style={{
               borderRadius: "1rem",
               padding: "0.85rem 0.9rem",
