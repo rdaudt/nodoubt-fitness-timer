@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: completed
-stopped_at: Completed 01-01-PLAN.md
-last_updated: "2026-04-16T20:15:22.7246703Z"
-last_activity: 2026-04-16 - Planned Phase 2 (authoring, library CRUD, and drafts) for execution.
+status: in_progress
+stopped_at: Completed 02-01-PLAN.md
+last_updated: "2026-04-16T21:54:18.6386425Z"
+last_activity: 2026-04-16 - Completed 02-01 library/detail CRUD and template duplication workflows.
 progress:
   total_phases: 5
   completed_phases: 1
   total_plans: 3
-  completed_plans: 3
-  percent: 100
+  completed_plans: 1
+  percent: 33
 ---
 
 # Project State
@@ -21,32 +21,33 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-15)
 
 **Core value:** Users can quickly create or open a structured workout timer and run it reliably from across the room with clear visual, audio, and haptic transitions.
-**Current focus:** Phase 2 planned - ready to execute authoring, library CRUD, and editor work.
+**Current focus:** Phase 2 in progress - execute 02-02 create flows and guest temp-save behavior.
 
 ## Current Position
 
-Phase: 1 of 5 (Foundation, Access, and Data Boundaries)
-Plan: 3 of 3 in current phase
-Status: Complete
-Last activity: 2026-04-16 - Planned Phase 2 (authoring, library CRUD, and drafts) for execution.
+Phase: 2 of 5 (Authoring, Library CRUD, and Drafts)
+Plan: 1 of 3 in current phase
+Status: In progress
+Last activity: 2026-04-16 - Completed 02-01 library/detail CRUD and template duplication workflows.
 
-Progress: [##########] 100%
+Progress: [###-------] 33%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 3
-- Average duration: 13.7 min
-- Total execution time: 0.7 hours
+- Total plans completed: 4
+- Average duration: 15.3 min
+- Total execution time: 1.0 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01 | 3 | 41 min | 13.7 min |
+| 02 | 1 | 20 min | 20.0 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (18 min), 01-03 (4 min), 01-02 (19 min)
+- Last 5 plans: 02-01 (20 min), 01-01 (19 min), 01-03 (4 min), 01-02 (19 min)
 - Trend: Stable
 
 ## Accumulated Context
@@ -68,6 +69,9 @@ Recent decisions affecting current work:
 - [Phase 01]: Use a dedicated (shell) route group so home and templates keep shared chrome while /run stays isolated for future playback.
 - [Phase 01]: Resolve guest versus signed-in home differences through one server-rendered view-model instead of separate page trees.
 - [Phase 01]: Keep official template previews visible in auth test mode and without live data so Phase 1 shell smoke remains representative.
+- [Phase 02]: Keep detail as the review boundary while adding explicit card-level duplicate/delete actions in library.
+- [Phase 02]: Enforce duplicate-before-edit for official templates by always creating private draft copies first.
+- [Phase 02]: Maintain named-slice test runners (`test:phase1`, `test:phase2`) so plan-level verification stays fast on Windows and Playwright.
 
 ### Pending Todos
 
@@ -79,6 +83,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-16T20:15:22.7246703Z
-Stopped at: Session resumed, proceeding to execute phase 2
+Last session: 2026-04-16T21:54:18.6386425Z
+Stopped at: Completed 02-01-PLAN.md
 Resume file: None
