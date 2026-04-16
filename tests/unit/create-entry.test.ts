@@ -6,10 +6,10 @@ import {
   encodeGuestTimerSeed,
 } from "../../src/features/create/server/create-timer-from-preset";
 
-function buildFormData(entries: Record<string, string>) {
+function toFormData(values: Record<string, string>) {
   const formData = new FormData();
 
-  for (const [key, value] of Object.entries(entries)) {
+  for (const [key, value] of Object.entries(values)) {
     formData.set(key, value);
   }
 
@@ -17,62 +17,60 @@ function buildFormData(entries: Record<string, string>) {
 }
 
 describe("create-entry", () => {
-  it("builds a hiit draft with a default generated name", () => {
+  it("creates a valid HIIT draft with generated naming and interval structure", () => {
     const input = buildTimerFromPreset(
       "hiit",
-      buildFormData({
-        workSeconds: "45",
-        restSeconds: "15",
-        rounds: "8",
-        warmupSeconds: "60",
-        cooldownSeconds: "60",
+      toFormData({
+        workSeconds: "50",
+        restSeconds: "10",
+        rounds: "4",
+        warmupSeconds: "30",
+        cooldownSeconds: "20",
       }),
     );
 
-    expect(input.name).toBe("HIIT 45s / 15s x 8");
+    expect(input.name).toBe("HIIT 50s / 10s x 4");
     expect(input.isDraft).toBe(true);
-    expect(input.intervals[0]?.kind).toBe("warmup");
-    expect(input.intervals.at(-1)?.kind).toBe("cooldown");
-    expect(input.totalSeconds).toBe(60 + 8 * 45 + 7 * 15 + 60);
+    expect(input.source).toBe("scratch");
+    expect(input.intervals.length).toBe(9);
+    expect(input.totalSeconds).toBe(280);
   });
 
-  it("builds a circuit draft that includes exercise repetitions across rounds", () => {
+  it("creates a valid Circuit/Tabata draft with repeated exercise blocks", () => {
     const input = buildTimerFromPreset(
       "circuit",
-      buildFormData({
-        workSeconds: "40",
-        restSeconds: "20",
-        exercises: "4",
-        rounds: "3",
-        warmupSeconds: "90",
-        cooldownSeconds: "60",
+      toFormData({
+        workSeconds: "30",
+        restSeconds: "15",
+        exercises: "3",
+        rounds: "2",
+        warmupSeconds: "0",
+        cooldownSeconds: "45",
       }),
     );
 
-    expect(input.name).toBe("Circuit 4 Moves x 3 Rounds");
-    expect(
-      input.intervals.filter((interval) => interval.kind === "work").length,
-    ).toBe(12);
-    expect(input.totalSeconds).toBe(90 + 12 * 40 + 11 * 20 + 60);
+    expect(input.name).toBe("Circuit 3 Moves x 2 Rounds");
+    expect(input.intervals[0]?.id).toBe("round-1-exercise-1");
+    expect(input.intervals.at(-1)?.id).toBe("cooldown");
+    expect(input.totalSeconds).toBe(300);
   });
 
-  it("builds a round draft with round/rest cadence and an encoded guest seed", () => {
+  it("creates a valid Round draft and preserves seed encode/decode for guest flow", () => {
     const input = buildTimerFromPreset(
       "round",
-      buildFormData({
-        roundSeconds: "180",
-        restSeconds: "60",
-        rounds: "5",
+      toFormData({
+        roundSeconds: "120",
+        restSeconds: "30",
+        rounds: "3",
         warmupSeconds: "60",
         cooldownSeconds: "60",
       }),
     );
-    const encoded = encodeGuestTimerSeed(input);
-    const decoded = decodeGuestTimerSeed(encoded);
+    const seed = encodeGuestTimerSeed(input);
+    const decoded = decodeGuestTimerSeed(seed);
 
-    expect(input.name).toBe("Round 5 x 3:00");
-    expect(input.intervals[1]?.label).toBe("Round 1");
-    expect(decoded?.name).toBe("Round 5 x 3:00");
-    expect(decoded?.intervals.at(-1)?.kind).toBe("cooldown");
+    expect(input.name).toBe("Round 3 x 2:00");
+    expect(input.totalSeconds).toBe(540);
+    expect(decoded).toEqual(input);
   });
 });
