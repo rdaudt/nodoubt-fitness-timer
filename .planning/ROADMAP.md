@@ -11,7 +11,7 @@ This roadmap moves No Doubt Fitness Timer from a documentation-first repo to a b
 - Decimal phases (2.1, 2.2): Urgent insertions (marked with INSERTED)
 
 - [x] **Phase 1: Foundation, Access, and Data Boundaries** - Establish the mobile shell, guest/signed-in entry states, Google auth, and private timer ownership rules.
-- [ ] **Phase 2: Authoring, Library CRUD, and Drafts** - Deliver timer creation, editing, duplication, detail review, and reusable personal-library workflows.
+- [x] **Phase 2: Authoring, Library CRUD, and Drafts** - Deliver timer creation, editing, duplication, detail review, and reusable personal-library workflows.
 - [ ] **Phase 3: Deterministic Run Engine and Playback** - Make timers trustworthy to run from across the room with deterministic timing and device feedback.
 - [ ] **Phase 4: Offline Resilience and PWA Delivery** - Add installability and constrained offline playback for previously loaded timers.
 - [ ] **Phase 5: Settings, Account Lifecycle, and Launch Surfaces** - Finish defaults, account management, analytics, and branded supporting surfaces for launch readiness.
@@ -48,7 +48,7 @@ Plans:
 Plans:
 - [x] 02-01: Ship home/library CRUD flows, timer detail screens, and official-template duplication behavior.
 - [x] 02-02: Ship quick-create wizards, custom-create entry, guest temporary timer flow, and guest-to-save prompts.
-- [ ] 02-03: Ship the full timer editor with interval management, derived duration, and signed-in draft auto-save.
+- [x] 02-03: Ship the full timer editor with interval management, derived duration, and signed-in draft auto-save.
 
 ### Phase 3: Deterministic Run Engine and Playback
 **Goal**: Users can run structured timers reliably from a distance with stable timing, clear live context, strong controls, and browser-aware device feedback.
@@ -104,7 +104,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation, Access, and Data Boundaries | 3/3 | Complete    | 2026-04-16 |
-| 2. Authoring, Library CRUD, and Drafts | 2/3 | In Progress | - |
+| 2. Authoring, Library CRUD, and Drafts | 3/3 | Complete    | 2026-04-16 |
 | 3. Deterministic Run Engine and Playback | 0/3 | Not started | - |
 | 4. Offline Resilience and PWA Delivery | 0/2 | Not started | - |
 | 5. Settings, Account Lifecycle, and Launch Surfaces | 0/2 | Not started | - |
