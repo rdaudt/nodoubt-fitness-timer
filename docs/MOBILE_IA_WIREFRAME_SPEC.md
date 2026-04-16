@@ -134,12 +134,12 @@ Rules:
 ## Header Behavior
 
 ### Guest header
-- NoDoubt Fitness wordmark / logo
+- compact NoDoubt Fitness wordmark in the app header
 - optional small sign-in benefit message nearby or in content
 - no avatar chip
 
 ### Signed-in header
-- NoDoubt Fitness wordmark / logo
+- compact NoDoubt Fitness wordmark in the app header
 - profile chip with avatar and first name
 - optional subtle coaching CTA if it fits without crowding
 
@@ -150,6 +150,11 @@ Rules:
 - Reinforce NoDoubt Fitness branding
 - Make the app structure legible immediately
 - Support repeat use for signed-in users
+
+Brand note:
+
+- home can support a stronger brand moment than utility-heavy screens
+- if the full logo is used, it should appear in a contained hero, onboarding, or empty-state treatment rather than the default small top bar
 
 ### Guest home layout
 Order:
@@ -465,6 +470,7 @@ Recommended vertical order:
 - Guests may open full detail.
 - Editing an official template requires duplication first.
 - The original official template should remain immutable in the main library.
+- Official ownership should be shown via badge treatment rather than repeated full-logo placement.
 
 ## Run Screen
 
@@ -494,6 +500,7 @@ Rules:
 - no bottom navigation
 - no promotional banners
 - portrait-first layout only
+- branding should be minimal to nearly absent during active playback
 
 ### Run wireframe
 ```text
