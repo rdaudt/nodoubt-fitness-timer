@@ -32,8 +32,9 @@ function buildArgs(label, baseArgs) {
   const grepPattern = forwardedArgs
     .map((filter) => filter.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
     .join("|");
+  const shellSafePattern = isWindows ? `"${grepPattern}"` : grepPattern;
 
-  return [[...baseArgs, "--grep", grepPattern]];
+  return [[...baseArgs, "--grep", shellSafePattern]];
 }
 
 const testRuns = [
