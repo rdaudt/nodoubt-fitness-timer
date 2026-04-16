@@ -7,9 +7,9 @@
 
 ### Authentication & Account
 
-- [ ] **AUTH-01**: Guest user can use the app without signing in.
-- [ ] **AUTH-02**: User can sign in with Google to save timers permanently.
-- [ ] **AUTH-03**: Signed-in user session persists across returning visits.
+- [x] **AUTH-01**: Guest user can use the app without signing in.
+- [x] **AUTH-02**: User can sign in with Google to save timers permanently.
+- [x] **AUTH-03**: Signed-in user session persists across returning visits.
 - [ ] **AUTH-04**: Signed-in user can sign out when no workout is actively running.
 - [ ] **AUTH-05**: Signed-in user can delete their account after re-authentication and all personal timer data is removed.
 
@@ -88,7 +88,7 @@
 ### Settings, Profile & Promotion
 
 - [ ] **SETG-01**: Signed-in user can access a settings/profile screen from the main app shell.
-- [ ] **SETG-02**: Signed-in user sees a profile chip with first-name context in the signed-in header.
+- [x] **SETG-02**: Signed-in user sees a profile chip with first-name context in the signed-in header.
 - [ ] **SETG-03**: User can set global defaults for new timers, including preparation countdown, haptics behavior, and default lock-controls behavior.
 - [ ] **SETG-04**: User can access sign out, delete account, and Instagram / coaching links from settings or other non-critical surfaces.
 - [ ] **SETG-05**: The app includes a simple `About NoDoubt Fitness` surface.
@@ -157,9 +157,9 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | Phase 1 | Pending |
-| AUTH-02 | Phase 1 | Pending |
-| AUTH-03 | Phase 1 | Pending |
+| AUTH-01 | Phase 1 | Complete |
+| AUTH-02 | Phase 1 | Complete |
+| AUTH-03 | Phase 1 | Complete |
 | AUTH-04 | Phase 5 | Pending |
 | AUTH-05 | Phase 5 | Pending |
 | LIBR-01 | Phase 2 | Pending |
@@ -217,7 +217,7 @@
 | ALRT-04 | Phase 3 | Pending |
 | ALRT-05 | Phase 3 | Pending |
 | SETG-01 | Phase 5 | Pending |
-| SETG-02 | Phase 1 | Pending |
+| SETG-02 | Phase 1 | Complete |
 | SETG-03 | Phase 5 | Pending |
 | SETG-04 | Phase 5 | Pending |
 | SETG-05 | Phase 5 | Pending |
