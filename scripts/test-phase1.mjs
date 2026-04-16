@@ -5,15 +5,10 @@ const forwardedArgs = process.argv.slice(2);
 
 function run(command, args) {
   const executable = isWindows ? `${command}.cmd` : command;
-  const result = isWindows
-    ? spawnSync(process.env.ComSpec ?? "cmd.exe", ["/d", "/s", "/c", executable, ...args], {
-        stdio: "inherit",
-        shell: false,
-      })
-    : spawnSync(executable, args, {
-        stdio: "inherit",
-        shell: false,
-      });
+  const result = spawnSync(executable, args, {
+    stdio: "inherit",
+    shell: isWindows,
+  });
 
   if (result.status !== 0) {
     process.exit(result.status ?? 1);
