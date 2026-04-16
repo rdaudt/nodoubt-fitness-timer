@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import Link from "next/link";
 
 import { ProfileChip } from "../header/profile-chip";
@@ -27,9 +29,15 @@ function formatUpdatedAt(updatedAt: string) {
 
 interface LibraryScreenProps {
   viewModel: LibraryViewModel;
+  notice?: string | null;
+  actions?: Record<string, ReactNode>;
 }
 
-export function LibraryScreen({ viewModel }: LibraryScreenProps) {
+export function LibraryScreen({
+  viewModel,
+  notice = null,
+  actions = {},
+}: LibraryScreenProps) {
   const isSignedIn = viewModel.auth.kind === "signed-in";
 
   return (
@@ -219,6 +227,21 @@ export function LibraryScreen({ viewModel }: LibraryScreenProps) {
               Return home
             </Link>
           )}
+          {notice ? (
+            <p
+              data-testid="library-notice"
+              style={{
+                margin: 0,
+                padding: "0.8rem 0.9rem",
+                borderRadius: "1rem",
+                backgroundColor: "rgba(28, 24, 20, 0.9)",
+                color: "#f8ecda",
+                fontWeight: 600,
+              }}
+            >
+              {notice}
+            </p>
+          ) : null}
         </div>
       </header>
       {viewModel.items.length > 0 ? (
@@ -229,9 +252,8 @@ export function LibraryScreen({ viewModel }: LibraryScreenProps) {
           }}
         >
           {viewModel.items.map((timer) => (
-            <Link
+            <article
               key={timer.id}
-              href={timer.detailHref}
               data-testid={`library-card-${timer.id}`}
               style={{
                 display: "grid",
@@ -240,8 +262,6 @@ export function LibraryScreen({ viewModel }: LibraryScreenProps) {
                 padding: "1rem",
                 backgroundColor: "#fff8f0",
                 border: "1px solid rgba(140, 92, 22, 0.14)",
-                color: "#1c1814",
-                textDecoration: "none",
               }}
             >
               <div
@@ -252,14 +272,22 @@ export function LibraryScreen({ viewModel }: LibraryScreenProps) {
                   gap: "0.8rem",
                 }}
               >
-                <h2
+                <Link
+                  href={timer.detailHref}
                   style={{
-                    margin: 0,
-                    fontSize: "1.05rem",
+                    color: "#1c1814",
+                    textDecoration: "none",
                   }}
                 >
-                  {timer.name}
-                </h2>
+                  <h2
+                    style={{
+                      margin: 0,
+                      fontSize: "1.05rem",
+                    }}
+                  >
+                    {timer.name}
+                  </h2>
+                </Link>
                 {timer.draftLabel ? (
                   <span
                     data-testid={`library-draft-${timer.id}`}
@@ -306,7 +334,8 @@ export function LibraryScreen({ viewModel }: LibraryScreenProps) {
               >
                 Updated {formatUpdatedAt(timer.updatedAt)}
               </p>
-            </Link>
+              {actions[timer.id] ? <div>{actions[timer.id]}</div> : null}
+            </article>
           ))}
         </div>
       ) : (

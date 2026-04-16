@@ -14,10 +14,12 @@ import {
 import {
   buildDuplicatePersonalTimerInput,
   buildPersonalTimerInsert,
+  deleteMockPersonalTimerRow,
   getMockPersonalTimerRowById,
   insertMockPersonalTimerRow,
   listPersonalTimersSpec,
   mapPersonalTimerRow,
+  renameMockPersonalTimerRow,
   type PersonalTimerRow,
 } from "../../../../src/features/timers/repositories/personal-timers";
 
@@ -106,6 +108,119 @@ async function duplicateTimerAction(formData: FormData) {
   );
 }
 
+async function renameTimerAction(formData: FormData) {
+  "use server";
+
+  const timerId = String(formData.get("timerId") ?? "").trim();
+  const nextName = String(formData.get("name") ?? "").trim();
+
+  if (!timerId) {
+    redirect("/library");
+  }
+
+  if (!nextName) {
+    redirect(
+      `/timers/${timerId}?notice=${encodeURIComponent("Enter a timer name before you save a rename.")}`,
+    );
+  }
+
+  const auth = await getAuthContext();
+
+  if (auth.kind !== "signed-in") {
+    redirect(
+      `/timers/${timerId}?notice=${encodeURIComponent("Sign in to rename personal timers.")}`,
+    );
+  }
+
+  if (isAuthTestMode()) {
+    const renamed = renameMockPersonalTimerRow(
+      { userId: auth.userId },
+      timerId,
+      nextName,
+    );
+
+    redirect(
+      `/timers/${timerId}?notice=${encodeURIComponent(
+        renamed
+          ? "Timer renamed successfully."
+          : "That timer is unavailable, so nothing was renamed.",
+      )}`,
+    );
+  }
+
+  if (!getSupabaseEnv()) {
+    redirect(
+      `/timers/${timerId}?notice=${encodeURIComponent("Supabase is not configured, so renaming is only available in auth test mode right now.")}`,
+    );
+  }
+
+  const supabase = await createServer();
+  const { error } = await supabase
+    .from("personal_timers")
+    .update({ name: nextName })
+    .eq("id", timerId)
+    .eq("owner_id", auth.userId);
+
+  if (error) {
+    redirect(
+      `/timers/${timerId}?notice=${encodeURIComponent("Timer rename failed. Try again once your private timer storage is available.")}`,
+    );
+  }
+
+  redirect(`/timers/${timerId}?notice=${encodeURIComponent("Timer renamed successfully.")}`);
+}
+
+async function deleteTimerAction(formData: FormData) {
+  "use server";
+
+  const timerId = String(formData.get("timerId") ?? "").trim();
+
+  if (!timerId) {
+    redirect("/library");
+  }
+
+  const auth = await getAuthContext();
+
+  if (auth.kind !== "signed-in") {
+    redirect(
+      `/timers/${timerId}?notice=${encodeURIComponent("Sign in to delete personal timers.")}`,
+    );
+  }
+
+  if (isAuthTestMode()) {
+    const deleted = deleteMockPersonalTimerRow({ userId: auth.userId }, timerId);
+
+    redirect(
+      `/library?notice=${encodeURIComponent(
+        deleted
+          ? "Timer deleted from your library."
+          : "That timer is unavailable, so nothing was deleted.",
+      )}`,
+    );
+  }
+
+  if (!getSupabaseEnv()) {
+    redirect(
+      `/timers/${timerId}?notice=${encodeURIComponent("Supabase is not configured, so deletion is only available in auth test mode right now.")}`,
+    );
+  }
+
+  const supabase = await createServer();
+  const { error } = await supabase
+    .from("personal_timers")
+    .delete()
+    .eq("id", timerId)
+    .eq("owner_id", auth.userId);
+
+  if (error) {
+    redirect(
+      `/timers/${timerId}?notice=${encodeURIComponent("Timer deletion failed. Try again once your private timer storage is available.")}`,
+    );
+  }
+
+  redirect(`/library?notice=${encodeURIComponent("Timer deleted from your library.")}`);
+}
+
 interface TimerDetailPageProps {
   params: Promise<{
     id: string;
@@ -188,15 +303,87 @@ export default async function TimerDetailPage({
             </button>
           </form>
         </div>
+        <form
+          action={renameTimerAction}
+          style={{
+            display: "grid",
+            gap: "0.55rem",
+          }}
+        >
+          <input type="hidden" name="timerId" value={id} />
+          <label
+            htmlFor="rename-timer"
+            style={{
+              fontSize: "0.9rem",
+              fontWeight: 700,
+              color: "#433d35",
+            }}
+          >
+            Rename timer
+          </label>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "minmax(0, 1fr) auto",
+              gap: "0.6rem",
+            }}
+          >
+            <input
+              id="rename-timer"
+              name="name"
+              defaultValue={viewModel.title}
+              data-testid="rename-timer-input"
+              style={{
+                borderRadius: "1rem",
+                border: "1px solid rgba(140, 92, 22, 0.22)",
+                padding: "0.8rem 0.9rem",
+                fontSize: "1rem",
+                color: "#2b2520",
+                backgroundColor: "rgba(255, 255, 255, 0.88)",
+              }}
+            />
+            <button
+              type="submit"
+              data-testid="rename-timer-submit"
+              style={{
+                border: "none",
+                borderRadius: "1rem",
+                padding: "0.8rem 0.95rem",
+                fontWeight: 700,
+                backgroundColor: "#f2bb67",
+                color: "#1c1814",
+              }}
+            >
+              Save Name
+            </button>
+          </div>
+        </form>
+        <form action={deleteTimerAction}>
+          <input type="hidden" name="timerId" value={id} />
+          <button
+            type="submit"
+            data-testid="delete-timer-submit"
+            style={{
+              width: "fit-content",
+              border: "none",
+              borderRadius: "1rem",
+              padding: "0.8rem 0.95rem",
+              fontWeight: 700,
+              backgroundColor: "#c24d36",
+              color: "#fff4ee",
+            }}
+          >
+            Delete Timer
+          </button>
+        </form>
         <p
           style={{
             margin: 0,
             color: "#5a544d",
           }}
         >
-          Rename and delete actions land with the next library CRUD pass. This
-          screen is the review boundary for run, edit, and duplicate entry
-          points.
+          Detail remains the review boundary for run and edit entry points while
+          library cards expose quick duplicate and delete actions.
         </p>
       </div>
     ) : null;

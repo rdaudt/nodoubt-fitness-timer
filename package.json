@@ -15,7 +15,8 @@
     "test:integration": "vitest run --config vitest.config.ts --project integration --passWithNoTests",
     "test:e2e": "playwright test --config playwright.config.ts --pass-with-no-tests",
     "test:browser": "npm run test:e2e",
-    "test:phase1": "node ./scripts/test-phase1.mjs"
+    "test:phase1": "node ./scripts/test-phase1.mjs",
+    "test:phase2": "node ./scripts/test-phase2.mjs"
   },
   "repository": {
     "type": "git",

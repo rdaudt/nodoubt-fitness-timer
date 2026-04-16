@@ -265,6 +265,65 @@ export function insertMockPersonalTimerRow(
   return clonePersonalTimerRow(row);
 }
 
+export function renameMockPersonalTimerRow(
+  session: OwnerSession | null | undefined,
+  timerId: string,
+  nextName: string,
+): PersonalTimerRow | null {
+  const ownerId = assertAuthenticatedOwner(session);
+  const rows = mockPersonalTimerStore.get(ownerId) ?? createSeededMockTimers(ownerId);
+  const normalizedName = nextName.trim();
+
+  if (!mockPersonalTimerStore.has(ownerId)) {
+    mockPersonalTimerStore.set(ownerId, rows);
+  }
+
+  if (!normalizedName) {
+    return null;
+  }
+
+  let renamedRow: PersonalTimerRow | null = null;
+  const updatedRows = rows.map((row) => {
+    if (row.id !== timerId) {
+      return row;
+    }
+
+    renamedRow = {
+      ...row,
+      name: normalizedName,
+      updated_at: new Date().toISOString(),
+    };
+
+    return renamedRow;
+  });
+
+  mockPersonalTimerStore.set(ownerId, updatedRows);
+
+  return renamedRow ? clonePersonalTimerRow(renamedRow) : null;
+}
+
+export function deleteMockPersonalTimerRow(
+  session: OwnerSession | null | undefined,
+  timerId: string,
+): boolean {
+  const ownerId = assertAuthenticatedOwner(session);
+  const rows = mockPersonalTimerStore.get(ownerId) ?? createSeededMockTimers(ownerId);
+
+  if (!mockPersonalTimerStore.has(ownerId)) {
+    mockPersonalTimerStore.set(ownerId, rows);
+  }
+
+  const updatedRows = rows.filter((row) => row.id !== timerId);
+
+  if (updatedRows.length === rows.length) {
+    return false;
+  }
+
+  mockPersonalTimerStore.set(ownerId, updatedRows);
+
+  return true;
+}
+
 export function assertAuthenticatedOwner(
   session: OwnerSession | null | undefined,
 ): string {
