@@ -1,0 +1,845 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NoDoubt Fitness Timer - Grayscale Wireframes</title>
+  <style>
+    :root {
+      --bg: #f3f3f3;
+      --panel: #ffffff;
+      --ink: #111111;
+      --muted: #5b5b5b;
+      --line: #d5d5d5;
+      --line-strong: #8f8f8f;
+      --shade-1: #f7f7f7;
+      --shade-2: #ececec;
+      --shade-3: #dddddd;
+      --shade-4: #c5c5c5;
+      --shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+      --radius-lg: 28px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+      --frame-width: 360px;
+      --frame-height: 780px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--ink);
+      background: linear-gradient(180deg, #fafafa 0%, #efefef 100%);
+    }
+
+    .page {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 32px 24px 80px;
+    }
+
+    .hero {
+      margin-bottom: 28px;
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: linear-gradient(180deg, #ffffff 0%, #f3f3f3 100%);
+      box-shadow: var(--shadow);
+    }
+
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: 28px;
+      letter-spacing: 0.02em;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 900px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .legend-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel);
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .swatch {
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+    }
+
+    .screens {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(390px, 1fr));
+      gap: 28px 24px;
+      align-items: start;
+    }
+
+    .screen-block h2 {
+      margin: 0 0 6px;
+      font-size: 18px;
+    }
+
+    .screen-block p {
+      margin: 0 0 14px;
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 14px;
+    }
+
+    .phone {
+      width: var(--frame-width);
+      height: var(--frame-height);
+      margin: 0 auto;
+      padding: 14px;
+      border: 1px solid var(--line-strong);
+      border-radius: 38px;
+      background: linear-gradient(180deg, #d8d8d8 0%, #bcbcbc 100%);
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      width: 120px;
+      height: 20px;
+      transform: translateX(-50%);
+      border-radius: 0 0 16px 16px;
+      background: #8e8e8e;
+    }
+
+    .screen {
+      height: 100%;
+      border-radius: 26px;
+      background: linear-gradient(180deg, #ffffff 0%, #f6f6f6 100%);
+      border: 1px solid #cfcfcf;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 18px 14px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, #ffffff 0%, #f7f7f7 100%);
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .brand-title {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+    }
+
+    .profile-chip, .ghost-chip, .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid var(--line);
+      background: var(--shade-1);
+    }
+
+    .content {
+      flex: 1;
+      overflow: hidden;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .scroll { overflow: auto; padding-right: 4px; }
+    .stack { display: flex; flex-direction: column; gap: 10px; }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .helper {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .note {
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      background: var(--shade-1);
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      line-height: 1.45;
+      color: var(--muted);
+    }
+
+    .timer-card, .cta-card, .panel, .interval-row, .wizard-card, .settings-row, .summary-row {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: var(--panel);
+    }
+
+    .timer-card {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: linear-gradient(180deg, #ffffff 0%, #f5f5f5 100%);
+    }
+
+    .timer-top {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .timer-name {
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+
+    .timer-meta {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .timer-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .meta-row { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    .badge {
+      padding: 6px 10px;
+      font-size: 11px;
+      background: var(--shade-1);
+    }
+
+    .badge.official { background: var(--shade-2); }
+    .badge.draft { background: var(--shade-3); }
+
+    .btn, .btn-ghost, .btn-wide {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      border-radius: 12px;
+      border: 1px solid var(--line-strong);
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--ink);
+      background: linear-gradient(180deg, #f0f0f0 0%, #d8d8d8 100%);
+    }
+
+    .btn, .btn-ghost { padding: 0 14px; }
+    .btn-wide { width: 100%; padding: 0 16px; }
+
+    .btn-ghost {
+      background: var(--panel);
+      border-color: var(--line);
+    }
+
+    .cta-card {
+      padding: 16px;
+      background: linear-gradient(180deg, #f0f0f0 0%, #dfdfdf 100%);
+    }
+
+    .cta-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    .bottom-nav {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      padding: 14px 16px 18px;
+      border-top: 1px solid var(--line);
+      background: linear-gradient(180deg, #f7f7f7 0%, #ececec 100%);
+    }
+
+    .nav-item {
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      font-size: 12px;
+      font-weight: 700;
+      background: var(--panel);
+    }
+
+    .nav-item.primary {
+      background: linear-gradient(180deg, #e7e7e7 0%, #cccccc 100%);
+      border-color: var(--line-strong);
+    }
+
+    .search-pill {
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--shade-1);
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .wizard-progress {
+      height: 8px;
+      border-radius: 999px;
+      background: var(--shade-2);
+      overflow: hidden;
+      border: 1px solid var(--line);
+    }
+
+    .wizard-progress span {
+      display: block;
+      height: 100%;
+      background: linear-gradient(90deg, #9b9b9b 0%, #5d5d5d 100%);
+    }
+
+    .wizard-card {
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f5f5f5 100%);
+    }
+
+    .wizard-label {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+
+    .wizard-value {
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      text-align: center;
+      margin: 14px 0;
+    }
+
+    .segmented {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .segmented div {
+      min-height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--shade-1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .editor-summary {
+      padding: 14px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #f8f8f8 0%, #ebebeb 100%);
+    }
+
+    .editor-summary strong {
+      display: block;
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .summary-row {
+      padding: 12px;
+      background: var(--panel);
+      min-height: 64px;
+    }
+
+    .summary-row span {
+      display: block;
+      font-size: 11px;
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+
+    .summary-row strong { font-size: 18px; }
+
+    .interval-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .interval-row {
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 56px;
+      background: linear-gradient(180deg, #ffffff 0%, #f7f7f7 100%);
+    }
+
+    .drag {
+      width: 18px;
+      color: var(--muted);
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .run-screen {
+      background: linear-gradient(180deg, #efefef 0%, #dcdcdc 100%);
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 26px 20px 28px;
+    }
+
+    .run-top {
+      text-align: center;
+      padding-top: 36px;
+    }
+
+    .run-label {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #3b3b3b;
+    }
+
+    .run-time {
+      font-size: 86px;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: 0.03em;
+      margin: 26px 0 20px;
+    }
+
+    .run-meta {
+      color: #424242;
+      font-size: 16px;
+      line-height: 1.55;
+    }
+
+    .run-controls {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .run-controls .btn-wide { min-height: 54px; }
+
+    .run-footer {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .completion {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 16px;
+      padding: 22px;
+      text-align: center;
+      background: linear-gradient(180deg, #f8f8f8 0%, #ececec 100%);
+    }
+
+    .completion-mark {
+      width: 82px;
+      height: 82px;
+      margin: 0 auto;
+      border-radius: 999px;
+      border: 2px solid var(--line-strong);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      font-weight: 800;
+      background: var(--panel);
+    }
+
+    .prompt {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: linear-gradient(180deg, #f6f6f6 0%, #ebebeb 100%);
+    }
+
+    .prompt-card {
+      width: 100%;
+      padding: 22px;
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .settings-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .settings-row {
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 58px;
+    }
+
+    .settings-row small { color: var(--muted); }
+    .spacer { flex: 1; }
+
+    @media (max-width: 920px) {
+      .screens { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <h1>NoDoubt Fitness Timer - Grayscale Visual Wireframes</h1>
+      <p>This artifact turns the mobile IA spec into low-fidelity visual wireframes for MVP1. The focus is hierarchy, navigation, and screen behavior rather than final styling.</p>
+      <div class="legend">
+        <div class="legend-chip"><span class="swatch" style="background:#ffffff"></span> Surface</div>
+        <div class="legend-chip"><span class="swatch" style="background:#ececec"></span> Secondary panel</div>
+        <div class="legend-chip"><span class="swatch" style="background:#d8d8d8"></span> Primary action emphasis</div>
+        <div class="legend-chip"><span class="swatch" style="background:#c5c5c5"></span> Navigation / persistent controls</div>
+      </div>
+    </section>
+
+    <section class="screens">
+      <article class="screen-block">
+        <h2>Guest Home</h2>
+        <p>Guests land on official NoDoubt templates first, with only light sign-in messaging.</p>
+        <div class="phone"><div class="screen">
+          <div class="topbar">
+            <div class="brand"><div class="brand-title">NoDoubt Fitness</div><div class="brand-sub">Timer App</div></div>
+            <div class="ghost-chip">Sign in</div>
+          </div>
+          <div class="content">
+            <div class="note">Train now. Sign in with Google only when you want to save timers permanently.</div>
+            <div class="scroll stack">
+              <section>
+                <div class="section-title">Official NoDoubt Templates</div>
+                <div class="stack">
+                  <div class="timer-card">
+                    <div class="timer-top"><div><div class="timer-name">20 Min HIIT</div><div class="timer-meta">20:00 • 12 intervals</div></div><div class="badge official">Official</div></div>
+                    <div class="timer-actions"><div class="timer-meta">Fast-start workout</div><div class="btn">Run now</div></div>
+                  </div>
+                  <div class="timer-card">
+                    <div class="timer-top"><div><div class="timer-name">Beginner Circuit</div><div class="timer-meta">18:00 • 10 intervals</div></div><div class="badge official">Official</div></div>
+                    <div class="timer-actions"><div class="timer-meta">Low friction entry</div><div class="btn">Run now</div></div>
+                  </div>
+                  <div class="timer-card">
+                    <div class="timer-top"><div><div class="timer-name">Round Power Session</div><div class="timer-meta">24:00 • 8 rounds</div></div><div class="badge official">Official</div></div>
+                    <div class="timer-actions"><div class="timer-meta">Coach-led feel</div><div class="btn">Run now</div></div>
+                  </div>
+                </div>
+              </section>
+              <div class="cta-card"><strong>Train with NoDoubt Fitness</strong><div class="helper">Lightweight lead-gen touchpoint to Instagram DM.</div></div>
+            </div>
+          </div>
+          <div class="bottom-nav"><div class="nav-item">Home</div><div class="nav-item primary">Create</div><div class="nav-item">Settings</div></div>
+        </div></div>
+      </article>
+
+      <article class="screen-block">
+        <h2>Signed-In Home</h2>
+        <p>Signed-in users see their personal library first, with official templates below.</p>
+        <div class="phone"><div class="screen">
+          <div class="topbar">
+            <div class="brand"><div class="brand-title">NoDoubt Fitness</div><div class="brand-sub">My Timers</div></div>
+            <div class="profile-chip">Ana</div>
+          </div>
+          <div class="content">
+            <section>
+              <div class="section-title"><span>My Timers</span><span class="search-pill">Search</span></div>
+              <div class="stack">
+                <div class="timer-card">
+                  <div class="timer-top"><div><div class="timer-name">Leg Day Rounds</div><div class="timer-meta">24:00 • 16 intervals</div></div></div>
+                  <div class="timer-actions"><div class="meta-row"><div class="badge">Round</div></div><div class="btn">Run now</div></div>
+                </div>
+                <div class="timer-card">
+                  <div class="timer-top"><div><div class="timer-name">Core Blast</div><div class="timer-meta">12:00 • 8 intervals</div></div><div class="badge draft">Draft</div></div>
+                  <div class="timer-actions"><div class="meta-row"><div class="badge">Custom</div></div><div class="btn">Run now</div></div>
+                </div>
+              </div>
+            </section>
+            <section class="scroll">
+              <div class="section-title">Official NoDoubt Templates</div>
+              <div class="stack">
+                <div class="timer-card">
+                  <div class="timer-top"><div><div class="timer-name">20 Min HIIT</div><div class="timer-meta">20:00 • 12 intervals</div></div><div class="badge official">Official</div></div>
+                  <div class="timer-actions"><div class="timer-meta">Duplicate to customize</div><div class="btn">Run now</div></div>
+                </div>
+              </div>
+            </section>
+            <div class="cta-card"><strong>Message NoDoubt Fitness</strong><div class="helper">Coaching CTA kept present, but secondary to utility.</div></div>
+          </div>
+          <div class="bottom-nav"><div class="nav-item">Home</div><div class="nav-item primary">Create</div><div class="nav-item">Settings</div></div>
+        </div></div>
+      </article>
+
+      <article class="screen-block">
+        <h2>Create Type Picker</h2>
+        <p>The center navigation action opens a simple type picker with four supported timer types.</p>
+        <div class="phone"><div class="screen">
+          <div class="topbar">
+            <div class="brand"><div class="brand-title">Create Timer</div><div class="brand-sub">Choose a type</div></div>
+            <div class="ghost-chip">Close</div>
+          </div>
+          <div class="content scroll stack">
+            <div class="note">Structured templates should feel fast and obvious on mobile.</div>
+            <div class="timer-card"><div class="timer-name">HIIT</div><div class="timer-meta">Work / rest repeats</div></div>
+            <div class="timer-card"><div class="timer-name">Circuit / Tabata</div><div class="timer-meta">Exercise list with repeating rounds</div></div>
+            <div class="timer-card"><div class="timer-name">Round</div><div class="timer-meta">Timed rounds with rest</div></div>
+            <div class="timer-card"><div class="timer-name">Custom</div><div class="timer-meta">Build your own interval structure</div></div>
+          </div>
+        </div></div>
+      </article>
+
+      <article class="screen-block">
+        <h2>HIIT Wizard</h2>
+        <p>Quick-start timer types use short, wizard-style setup with large controls and obvious progress.</p>
+        <div class="phone"><div class="screen">
+          <div class="topbar">
+            <div class="brand"><div class="brand-title">HIIT Setup</div><div class="brand-sub">Step 2 of 4</div></div>
+            <div class="ghost-chip">Close</div>
+          </div>
+          <div class="content">
+            <div class="wizard-progress"><span style="width:50%"></span></div>
+            <div class="wizard-card">
+              <div class="wizard-label">Rest Duration</div>
+              <div class="wizard-value">00:15</div>
+              <div class="run-controls"><div class="btn-wide">-</div><div class="btn-wide">15s</div><div class="btn-wide">+</div></div>
+              <div class="segmented"><div>10s</div><div>15s</div><div>20s</div><div>30s</div></div>
+            </div>
+            <div class="spacer"></div>
+            <div class="run-footer"><div class="btn-ghost">Back</div><div class="btn-wide">Next</div></div>
+          </div>
+        </div></div>
+      </article>
+
+      <article class="screen-block">
+        <h2>Custom Editor</h2>
+        <p>Custom is the advanced path, but the editor still stays card-based and mobile-readable.</p>
+        <div class="phone"><div class="screen">
+          <div class="topbar">
+            <div class="brand"><div class="brand-title">Custom Timer</div><div class="brand-sub">Full Body Flow</div></div>
+            <div class="ghost-chip">Close</div>
+          </div>
+          <div class="content scroll stack">
+            <div class="editor-summary">
+              <strong>Total 18:30</strong>
+              <div class="helper">Auto-saved while signed in.</div>
+              <div class="summary-grid">
+                <div class="summary-row"><span>Warmup</span><strong>00:30</strong></div>
+                <div class="summary-row"><span>Cooldown</span><strong>00:30</strong></div>
+                <div class="summary-row"><span>Sets</span><strong>3</strong></div>
+                <div class="summary-row"><span>Prep</span><strong>00:05</strong></div>
+              </div>
+            </div>
+            <section>
+              <div class="section-title">Intervals</div>
+              <div class="interval-list">
+                <div class="interval-row"><div class="drag">::</div><div class="spacer">Squats</div><strong>00:40</strong></div>
+                <div class="interval-row"><div class="drag">::</div><div class="spacer">Rest</div><strong>00:20</strong></div>
+                <div class="interval-row"><div class="drag">::</div><div class="spacer">Push Ups</div><strong>00:40</strong></div>
+                <div class="interval-row"><div class="drag">::</div><div class="spacer">Rest</div><strong>00:20</strong></div>
+              </div>
+            </section>
+            <div class="btn-wide">+ Add interval</div>
+          </div>
+          <div class="bottom-nav"><div class="nav-item">Back</div><div class="nav-item primary">Run now</div><div class="nav-item">Duplicate</div></div>
+        </div></div>
+      </article>
+
+      <article class="screen-block">
+        <h2>Timer Detail</h2>
+        <p>Cards open into a safe review surface with clear next actions before editing or running.</p>
+        <div class="phone"><div class="screen">
+          <div class="topbar">
+            <div class="brand"><div class="brand-title">Timer Detail</div><div class="brand-sub">Round timer</div></div>
+            <div class="ghost-chip">Back</div>
+          </div>
+          <div class="content scroll stack">
+            <div class="panel" style="padding:16px;">
+              <div class="timer-name">Leg Day Rounds</div>
+              <div class="timer-meta" style="margin-top:6px;">24:00 • 16 intervals • Round</div>
+              <div class="timer-actions" style="margin-top:14px;"><div class="btn">Run now</div><div class="btn-ghost">Edit</div></div>
+              <div class="timer-actions" style="margin-top:10px;"><div class="btn-ghost">Duplicate</div><div class="btn-ghost">Rename</div></div>
+            </div>
+            <section>
+              <div class="section-title">Interval Breakdown</div>
+              <div class="interval-list">
+                <div class="interval-row"><div class="spacer">Warmup</div><strong>00:30</strong></div>
+                <div class="interval-row"><div class="spacer">Round 1</div><strong>02:00</strong></div>
+                <div class="interval-row"><div class="spacer">Rest</div><strong>00:30</strong></div>
+                <div class="interval-row"><div class="spacer">Round 2</div><strong>02:00</strong></div>
+                <div class="interval-row"><div class="spacer">Cooldown</div><strong>00:30</strong></div>
+              </div>
+            </section>
+          </div>
+        </div></div>
+      </article>
+
+      <article class="screen-block">
+        <h2>Run Screen</h2>
+        <p>The run view removes navigation and keeps only critical workout information and controls.</p>
+        <div class="phone"><div class="screen">
+          <div class="run-screen">
+            <div class="run-top">
+              <div class="run-label">Round 3</div>
+              <div class="run-time">00:42</div>
+              <div class="run-meta">Next: Rest<br>Set 2 of 4 • Total left 12:18</div>
+            </div>
+            <div>
+              <div class="run-controls"><div class="btn-wide">Prev</div><div class="btn-wide">Pause</div><div class="btn-wide">Next</div></div>
+              <div class="run-footer" style="margin-top:10px;"><div class="btn-wide">Reset</div><div class="btn-wide">Lock</div></div>
+            </div>
+          </div>
+        </div></div>
+      </article>
+
+      <article class="screen-block">
+        <h2>Completion Screen</h2>
+        <p>Finish state is clean and action-oriented, with only a subtle coaching prompt.</p>
+        <div class="phone"><div class="screen">
+          <div class="completion">
+            <div class="completion-mark">OK</div>
+            <div>
+              <div class="timer-name" style="font-size:24px;">Workout Complete</div>
+              <div class="helper" style="margin-top:8px;">Leg Day Rounds</div>
+              <div class="helper">Completed: 24:00</div>
+            </div>
+            <div class="stack"><div class="btn-wide">Done / Back home</div><div class="btn-ghost">Run again</div></div>
+            <div class="cta-card"><strong>Want coaching from NoDoubt Fitness?</strong><div class="btn-wide" style="margin-top:10px;">Message on Instagram</div></div>
+          </div>
+        </div></div>
+      </article>
+
+      <article class="screen-block">
+        <h2>Sign-In Prompt</h2>
+        <p>Authentication is value-driven: guests are asked to sign in only when saving becomes relevant.</p>
+        <div class="phone"><div class="screen">
+          <div class="prompt">
+            <div class="prompt-card">
+              <div class="brand-title">Save Your Timer</div>
+              <div class="helper">Sign in with Google to save this timer to your private NoDoubt Fitness library and keep it across devices.</div>
+              <div class="btn-wide">Continue with Google</div>
+              <div class="btn-ghost">Not now</div>
+            </div>
+          </div>
+        </div></div>
+      </article>
+
+      <article class="screen-block">
+        <h2>Settings / Profile</h2>
+        <p>Settings centralizes defaults, business links, and account actions without cluttering workout flows.</p>
+        <div class="phone"><div class="screen">
+          <div class="topbar">
+            <div class="brand"><div class="brand-title">Settings</div><div class="brand-sub">Profile and defaults</div></div>
+            <div class="profile-chip">Ana</div>
+          </div>
+          <div class="content scroll stack">
+            <section class="settings-group">
+              <div class="section-title">Workout Defaults</div>
+              <div class="settings-row"><div><strong>Preparation Countdown</strong><br><small>Default for new timers</small></div><div>00:05</div></div>
+              <div class="settings-row"><div><strong>Haptics</strong><br><small>Enabled by default</small></div><div>On</div></div>
+              <div class="settings-row"><div><strong>Lock Controls Default</strong><br><small>Run screen safety</small></div><div>Off</div></div>
+            </section>
+            <section class="settings-group">
+              <div class="section-title">NoDoubt Fitness</div>
+              <div class="settings-row"><div><strong>About NoDoubt Fitness</strong></div><div>></div></div>
+              <div class="settings-row"><div><strong>Instagram</strong></div><div>></div></div>
+            </section>
+            <section class="settings-group">
+              <div class="section-title">Account</div>
+              <div class="settings-row"><div><strong>Sign out</strong></div><div>></div></div>
+              <div class="settings-row"><div><strong>Delete account</strong><br><small>Requires Google re-authentication</small></div><div>></div></div>
+            </section>
+          </div>
+          <div class="bottom-nav"><div class="nav-item">Home</div><div class="nav-item primary">Create</div><div class="nav-item">Settings</div></div>
+        </div></div>
+      </article>
+    </section>
+  </main>
+</body>
+</html>
