@@ -19,6 +19,7 @@ export interface EditorState {
   isDraft: boolean;
   source: TimerRecord["source"];
   sourceTemplateId: string | null;
+  structure: EditorStructureState;
   intervals: EditorIntervalDraft[];
 }
 
@@ -28,8 +29,16 @@ export interface EditorIntervalInput {
   durationSeconds: number;
 }
 
+export interface EditorStructureState {
+  warmupSeconds: number;
+  cooldownSeconds: number;
+  rounds: number;
+  roundRestSeconds: number;
+}
+
 export type EditorAction =
   | { type: "update-basics"; name?: string; description?: string }
+  | { type: "update-structure"; structure: Partial<EditorStructureState> }
   | { type: "add-interval"; interval: EditorIntervalInput }
   | { type: "update-interval"; intervalId: string; interval: EditorIntervalInput }
   | { type: "delete-interval"; intervalId: string }
@@ -56,6 +65,25 @@ function normalizeLabel(label: string, kind: EditorIntervalKind) {
 
 function createIntervalId() {
   return `editor-interval-${crypto.randomUUID()}`;
+}
+
+function clampWholeNumber(value: number, fallbackValue: number) {
+  if (!Number.isFinite(value)) {
+    return fallbackValue;
+  }
+
+  return Math.round(value);
+}
+
+function clampStructureValue(
+  value: number,
+  fallbackValue: number,
+  limits: { min: number; max: number },
+) {
+  return Math.min(
+    Math.max(clampWholeNumber(value, fallbackValue), limits.min),
+    limits.max,
+  );
 }
 
 function buildIntervalDraft(input: EditorIntervalInput): EditorIntervalDraft {
@@ -89,11 +117,37 @@ function buildFallbackInterval(): EditorIntervalDraft {
   };
 }
 
-export function deriveEditorIntervalTotalSeconds(state: Pick<EditorState, "intervals">) {
-  return state.intervals.reduce(
-    (sum, interval) => sum + interval.durationSeconds,
-    0,
-  );
+function buildDefaultStructureState(): EditorStructureState {
+  return {
+    warmupSeconds: 0,
+    cooldownSeconds: 0,
+    rounds: 1,
+    roundRestSeconds: 0,
+  };
+}
+
+function extractStructureState(
+  intervals: Pick<TimerIntervalBlock, "kind" | "durationSeconds">[],
+): EditorStructureState {
+  const structure = buildDefaultStructureState();
+
+  if (intervals[0]?.kind === "warmup") {
+    structure.warmupSeconds = clampStructureValue(
+      intervals[0].durationSeconds,
+      0,
+      { min: 0, max: 900 },
+    );
+  }
+
+  if (intervals.at(-1)?.kind === "cooldown") {
+    structure.cooldownSeconds = clampStructureValue(
+      intervals.at(-1)!.durationSeconds,
+      0,
+      { min: 0, max: 900 },
+    );
+  }
+
+  return structure;
 }
 
 export function buildEditorStateFromTimer(
@@ -112,6 +166,7 @@ export function buildEditorStateFromTimer(
     isDraft: timer.isDraft ?? true,
     source: timer.source ?? "scratch",
     sourceTemplateId: timer.sourceTemplateId ?? null,
+    structure: extractStructureState(timer.intervals),
     intervals: coreIntervals.length > 0 ? coreIntervals : [buildFallbackInterval()],
   };
 }
@@ -126,6 +181,32 @@ export function applyEditorAction(
         ...state,
         name: action.name ?? state.name,
         description: action.description ?? state.description,
+      };
+    case "update-structure":
+      return {
+        ...state,
+        structure: {
+          warmupSeconds: clampStructureValue(
+            action.structure.warmupSeconds ?? state.structure.warmupSeconds,
+            state.structure.warmupSeconds,
+            { min: 0, max: 900 },
+          ),
+          cooldownSeconds: clampStructureValue(
+            action.structure.cooldownSeconds ?? state.structure.cooldownSeconds,
+            state.structure.cooldownSeconds,
+            { min: 0, max: 900 },
+          ),
+          rounds: clampStructureValue(
+            action.structure.rounds ?? state.structure.rounds,
+            state.structure.rounds,
+            { min: 1, max: 30 },
+          ),
+          roundRestSeconds: clampStructureValue(
+            action.structure.roundRestSeconds ?? state.structure.roundRestSeconds,
+            state.structure.roundRestSeconds,
+            { min: 0, max: 900 },
+          ),
+        },
       };
     case "add-interval":
       return {

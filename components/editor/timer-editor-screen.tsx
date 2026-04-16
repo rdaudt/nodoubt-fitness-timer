@@ -7,11 +7,11 @@ import Link from "next/link";
 import type { ProfileDisplayRecord } from "../../src/features/profiles/contracts/profile";
 import {
   applyEditorAction,
-  deriveEditorIntervalTotalSeconds,
   type EditorIntervalDraft,
   type EditorIntervalInput,
   type EditorState,
 } from "../../src/features/editor/client/editor-state";
+import { deriveTotalSeconds } from "../../src/features/editor/client/derive-total-seconds";
 import { ProfileChip } from "../header/profile-chip";
 import { IntervalForm } from "./interval-form";
 import { IntervalList } from "./interval-list";
@@ -46,10 +46,7 @@ export function TimerEditorScreen({
       null,
     [editingIntervalId, editorState.intervals],
   );
-  const totalSeconds = useMemo(
-    () => deriveEditorIntervalTotalSeconds(editorState),
-    [editorState],
-  );
+  const totalSeconds = useMemo(() => deriveTotalSeconds(editorState), [editorState]);
 
   function applyIntervalUpdate(callback: () => void) {
     callback();
@@ -170,8 +167,8 @@ export function TimerEditorScreen({
               color: "#433d35",
             }}
           >
-            Rearrange, duplicate, and refine the core interval sequence here. The
-            next task layers structural timing and draft persistence onto this state.
+            Rearrange the core interval sequence, then shape the surrounding
+            workout with warmup, cooldown, and round structure controls.
           </p>
           {notice ? (
             <p
@@ -219,6 +216,18 @@ export function TimerEditorScreen({
               }}
             >
               {editorState.intervals.length} editable intervals
+            </span>
+            <span
+              style={{
+                borderRadius: "999px",
+                padding: "0.35rem 0.6rem",
+                backgroundColor: "rgba(255, 255, 255, 0.78)",
+                color: "#433d35",
+                fontSize: "0.85rem",
+                fontWeight: 600,
+              }}
+            >
+              {editorState.structure.rounds} rounds
             </span>
           </div>
         </div>
@@ -301,6 +310,187 @@ export function TimerEditorScreen({
         </label>
       </section>
       <section
+        data-testid="editor-structure-section"
+        style={{
+          display: "grid",
+          gap: "0.75rem",
+          padding: "1rem",
+          borderRadius: "1.2rem",
+          backgroundColor: "rgba(255, 255, 255, 0.72)",
+          border: "1px solid rgba(140, 92, 22, 0.12)",
+        }}
+      >
+        <h2
+          style={{
+            margin: 0,
+            fontSize: "1.2rem",
+          }}
+        >
+          Structure and Derived Duration
+        </h2>
+        <p
+          style={{
+            margin: 0,
+            color: "#5a544d",
+          }}
+        >
+          Core intervals repeat for each round. Round rest applies between rounds
+          only, while warmup and cooldown sit outside the repeated block.
+        </p>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+            gap: "0.75rem",
+          }}
+        >
+          <label
+            style={{
+              display: "grid",
+              gap: "0.35rem",
+              color: "#433d35",
+              fontWeight: 600,
+            }}
+          >
+            Warmup (seconds)
+            <input
+              type="number"
+              min={0}
+              max={900}
+              step={5}
+              value={editorState.structure.warmupSeconds}
+              data-testid="editor-warmup-input"
+              onChange={(event) =>
+                setEditorState((currentState) =>
+                  applyEditorAction(currentState, {
+                    type: "update-structure",
+                    structure: {
+                      warmupSeconds: Number(event.target.value),
+                    },
+                  }),
+                )
+              }
+              style={{
+                borderRadius: "1rem",
+                border: "1px solid rgba(140, 92, 22, 0.22)",
+                padding: "0.8rem 0.9rem",
+                fontSize: "1rem",
+                color: "#2b2520",
+                backgroundColor: "rgba(255, 255, 255, 0.88)",
+              }}
+            />
+          </label>
+          <label
+            style={{
+              display: "grid",
+              gap: "0.35rem",
+              color: "#433d35",
+              fontWeight: 600,
+            }}
+          >
+            Cooldown (seconds)
+            <input
+              type="number"
+              min={0}
+              max={900}
+              step={5}
+              value={editorState.structure.cooldownSeconds}
+              data-testid="editor-cooldown-input"
+              onChange={(event) =>
+                setEditorState((currentState) =>
+                  applyEditorAction(currentState, {
+                    type: "update-structure",
+                    structure: {
+                      cooldownSeconds: Number(event.target.value),
+                    },
+                  }),
+                )
+              }
+              style={{
+                borderRadius: "1rem",
+                border: "1px solid rgba(140, 92, 22, 0.22)",
+                padding: "0.8rem 0.9rem",
+                fontSize: "1rem",
+                color: "#2b2520",
+                backgroundColor: "rgba(255, 255, 255, 0.88)",
+              }}
+            />
+          </label>
+          <label
+            style={{
+              display: "grid",
+              gap: "0.35rem",
+              color: "#433d35",
+              fontWeight: 600,
+            }}
+          >
+            Rounds
+            <input
+              type="number"
+              min={1}
+              max={30}
+              step={1}
+              value={editorState.structure.rounds}
+              data-testid="editor-rounds-input"
+              onChange={(event) =>
+                setEditorState((currentState) =>
+                  applyEditorAction(currentState, {
+                    type: "update-structure",
+                    structure: {
+                      rounds: Number(event.target.value),
+                    },
+                  }),
+                )
+              }
+              style={{
+                borderRadius: "1rem",
+                border: "1px solid rgba(140, 92, 22, 0.22)",
+                padding: "0.8rem 0.9rem",
+                fontSize: "1rem",
+                color: "#2b2520",
+                backgroundColor: "rgba(255, 255, 255, 0.88)",
+              }}
+            />
+          </label>
+          <label
+            style={{
+              display: "grid",
+              gap: "0.35rem",
+              color: "#433d35",
+              fontWeight: 600,
+            }}
+          >
+            Rest between rounds (seconds)
+            <input
+              type="number"
+              min={0}
+              max={900}
+              step={5}
+              value={editorState.structure.roundRestSeconds}
+              data-testid="editor-round-rest-input"
+              onChange={(event) =>
+                setEditorState((currentState) =>
+                  applyEditorAction(currentState, {
+                    type: "update-structure",
+                    structure: {
+                      roundRestSeconds: Number(event.target.value),
+                    },
+                  }),
+                )
+              }
+              style={{
+                borderRadius: "1rem",
+                border: "1px solid rgba(140, 92, 22, 0.22)",
+                padding: "0.8rem 0.9rem",
+                fontSize: "1rem",
+                color: "#2b2520",
+                backgroundColor: "rgba(255, 255, 255, 0.88)",
+              }}
+            />
+          </label>
+        </div>
+      </section>
+      <section
         style={{
           display: "grid",
           gap: "0.75rem",
@@ -322,20 +512,15 @@ export function TimerEditorScreen({
           >
             Core Intervals
           </h2>
-          <button
-            type="button"
-            onClick={() => setEditingIntervalId(null)}
+          <p
             style={{
-              border: "1px solid rgba(140, 92, 22, 0.18)",
-              borderRadius: "999px",
-              padding: "0.45rem 0.7rem",
-              fontWeight: 700,
-              backgroundColor: "rgba(255, 255, 255, 0.78)",
-              color: "#1c1814",
+              margin: 0,
+              color: "#5a544d",
+              textAlign: "right",
             }}
           >
-            Add Interval
-          </button>
+            These intervals repeat as the round body.
+          </p>
         </div>
         <IntervalList
           intervals={editorState.intervals}
