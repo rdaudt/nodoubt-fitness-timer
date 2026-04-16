@@ -58,7 +58,8 @@ created: 2026-04-15
 - [ ] `tests/unit/home-view-model.test.ts` - guest/signed-in home composition and section-ordering coverage
 - [ ] `tests/unit/auth-bootstrap.test.ts` - SSR/bootstrap auth-state coverage
 - [ ] `tests/unit/rls-boundary.test.ts` - ownership boundary and policy contract coverage
-- [ ] `tests/e2e/phase1-auth-shell.spec.ts` - guest/signed-in route and session-restore smoke checks
+- [ ] `tests/e2e/phase1-home-shell.spec.ts` - guest/signed-in home shell smoke checks
+- [ ] `tests/e2e/phase1-auth-session.spec.ts` - login callback and session-restore smoke checks
 - [ ] `package.json` scripts for `test:unit` and `test:phase1`
 
 ---
