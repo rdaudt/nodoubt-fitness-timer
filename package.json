@@ -7,7 +7,12 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run test:phase1",
+    "test:unit": "vitest run --config vitest.config.ts --project unit --passWithNoTests",
+    "test:integration": "vitest run --config vitest.config.ts --project integration --passWithNoTests",
+    "test:e2e": "playwright test --config playwright.config.ts --pass-with-no-tests",
+    "test:browser": "npm run test:e2e",
+    "test:phase1": "vitest run --config vitest.config.ts --passWithNoTests"
   },
   "repository": {
     "type": "git",
@@ -22,6 +27,10 @@
   },
   "homepage": "https://github.com/rdaudt/nodoubt-fitness-timer#readme",
   "devDependencies": {
-    "playwright": "^1.59.1"
+    "@playwright/test": "^1.59.1",
+    "@types/node": "^25.6.0",
+    "playwright": "^1.59.1",
+    "typescript": "^6.0.2",
+    "vitest": "^4.1.4"
   }
 }
