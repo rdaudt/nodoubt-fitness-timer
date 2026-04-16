@@ -30,7 +30,7 @@ export function isAuthTestMode() {
 }
 
 export function encodeMockAuthSession(session: MockAuthSession) {
-  return Buffer.from(JSON.stringify(session), "utf8").toString("base64url");
+  return encodeURIComponent(JSON.stringify(session));
 }
 
 export async function getMockAuthSession() {
@@ -47,7 +47,7 @@ export async function getMockAuthSession() {
 
   try {
     const parsed = JSON.parse(
-      Buffer.from(rawCookie, "base64url").toString("utf8"),
+      decodeURIComponent(rawCookie),
     ) as Partial<MockAuthSession>;
 
     const userId = normalizeOptionalString(parsed.userId);
