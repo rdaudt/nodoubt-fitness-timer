@@ -19,6 +19,23 @@ function run(label, args) {
   }
 }
 
+function buildArgs(label, baseArgs) {
+  if (forwardedArgs.length === 0) {
+    return [baseArgs];
+  }
+
+  if (label === "unit" || label === "integration") {
+    return forwardedArgs.map((filter) => [
+      ...baseArgs,
+      "--",
+      "--testNamePattern",
+      filter,
+    ]);
+  }
+
+  return forwardedArgs.map((filter) => [...baseArgs, "--", "--grep", filter]);
+}
+
 const testRuns = [
   ["unit", ["run", "test:unit"]],
   ["integration", ["run", "test:integration"]],
@@ -26,9 +43,7 @@ const testRuns = [
 ];
 
 for (const [label, baseArgs] of testRuns) {
-  const args = forwardedArgs.length > 0
-    ? [...baseArgs, "--", ...forwardedArgs]
-    : baseArgs;
-
-  run(label, args);
+  for (const args of buildArgs(label, baseArgs)) {
+    run(label, args);
+  }
 }

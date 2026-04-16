@@ -21,8 +21,8 @@ describe("shell-routes", () => {
   it("keeps the home route server-rendered inside the shell group", () => {
     const homePage = readProjectFile("app/(shell)/page.tsx");
 
-    expect(homePage).toContain("getAuthContext");
-    expect(homePage).toContain("SessionBoundary");
+    expect(homePage).toContain("getHomeViewModel");
+    expect(homePage).toContain("HomeScreen");
     expect(homePage).toContain('dynamic = "force-dynamic"');
   });
 

@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { getHomeViewModel } from "../../src/features/home/server/get-home-view-model";
 
 describe("home-view-model", () => {
-  it("prioritizes official templates for guests without creating sign-in pressure", async () => {
+  it("guest-home prioritizes official templates without creating sign-in pressure", async () => {
     const viewModel = await getHomeViewModel({
       getAuthContext: async () => ({
         kind: "guest",
@@ -34,7 +34,7 @@ describe("home-view-model", () => {
     ]);
   });
 
-  it("prioritizes my timers first for signed-in users while preserving official templates", async () => {
+  it("signed-in-home prioritizes my timers while preserving official templates", async () => {
     const viewModel = await getHomeViewModel({
       getAuthContext: async () => ({
         kind: "signed-in",

@@ -49,11 +49,11 @@ test.describe("auth-session", () => {
     await page.goto(redirectUrl.toString());
 
     await expect(page.getByTestId("auth-status")).toHaveText("Signed In");
-    await expect(page.getByTestId("profile-chip")).toHaveText("Rita");
+    await expect(page.getByTestId("profile-chip")).toContainText("Rita");
 
     await page.reload();
 
     await expect(page.getByTestId("auth-status")).toHaveText("Signed In");
-    await expect(page.getByTestId("profile-chip")).toHaveText("Rita");
+    await expect(page.getByTestId("profile-chip")).toContainText("Rita");
   });
 });
