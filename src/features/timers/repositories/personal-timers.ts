@@ -131,7 +131,7 @@ const mockPersonalTimerSeed = [
     description: "A duplicated template tuned for short repeat efforts.",
     is_draft: false,
     source: "official-template",
-    source_template_id: "template-hustle-15",
+    source_template_id: "00000000-0000-0000-0000-000000000101",
     definition_version: 1,
     intervals: [
       {
@@ -220,6 +220,51 @@ export function listMockPersonalTimerRows(
   return seeded.map((row) => clonePersonalTimerRow(row));
 }
 
+export function getMockPersonalTimerRowById(
+  session: OwnerSession | null | undefined,
+  timerId: string,
+): PersonalTimerRow | null {
+  const ownerId = assertAuthenticatedOwner(session);
+  const rows = mockPersonalTimerStore.get(ownerId) ?? createSeededMockTimers(ownerId);
+
+  if (!mockPersonalTimerStore.has(ownerId)) {
+    mockPersonalTimerStore.set(ownerId, rows);
+  }
+
+  const row = rows.find((item) => item.id === timerId);
+
+  return row ? clonePersonalTimerRow(row) : null;
+}
+
+export function insertMockPersonalTimerRow(
+  session: OwnerSession | null | undefined,
+  input: TimerRecordInput,
+): PersonalTimerRow {
+  const ownerId = assertAuthenticatedOwner(session);
+  const existing =
+    mockPersonalTimerStore.get(ownerId)?.map((row) => clonePersonalTimerRow(row)) ??
+    createSeededMockTimers(ownerId);
+  const timestamp = new Date().toISOString();
+  const row: PersonalTimerRow = {
+    id: `timer-${crypto.randomUUID()}`,
+    owner_id: ownerId,
+    name: input.name,
+    description: input.description ?? null,
+    is_draft: input.isDraft ?? true,
+    source: input.source ?? "scratch",
+    source_template_id: input.sourceTemplateId ?? null,
+    definition_version: 1,
+    intervals: input.intervals.map((interval) => cloneInterval(interval)),
+    total_seconds: input.totalSeconds,
+    created_at: timestamp,
+    updated_at: timestamp,
+  };
+
+  mockPersonalTimerStore.set(ownerId, [row, ...existing]);
+
+  return clonePersonalTimerRow(row);
+}
+
 export function assertAuthenticatedOwner(
   session: OwnerSession | null | undefined,
 ): string {
@@ -294,6 +339,22 @@ export function mapPersonalTimerRow(row: PersonalTimerRow): TimerRecord {
     totalSeconds: row.total_seconds,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
+  };
+}
+
+export function buildDuplicatePersonalTimerInput(
+  timer: TimerRecord,
+): TimerRecordInput {
+  return {
+    name: `${timer.name} Copy`,
+    description: timer.description,
+    isDraft: true,
+    source: timer.source,
+    sourceTemplateId: timer.sourceTemplateId,
+    intervals: timer.intervals.map((interval) => ({
+      ...interval,
+    })),
+    totalSeconds: timer.totalSeconds,
   };
 }
 

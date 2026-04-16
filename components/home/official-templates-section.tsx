@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import type { OfficialTemplatesSection } from "../../src/features/home/server/get-home-view-model";
 
 function formatDuration(totalSeconds: number) {
@@ -55,13 +57,19 @@ export function OfficialTemplatesSection({
         }}
       >
         {section.items.map((template) => (
-          <article
+          <Link
             key={template.id}
+            href={`/templates/${template.slug}`}
+            data-testid={`official-template-card-${template.slug}`}
             style={{
+              display: "grid",
+              gap: "0.55rem",
               borderRadius: "1.4rem",
               padding: "1rem",
               backgroundColor: "#fff8f0",
               border: "1px solid rgba(140, 92, 22, 0.14)",
+              color: "#1c1814",
+              textDecoration: "none",
             }}
           >
             <p
@@ -78,7 +86,7 @@ export function OfficialTemplatesSection({
             </p>
             <h3
               style={{
-                margin: "0.4rem 0 0",
+                margin: 0,
                 fontSize: "1rem",
               }}
             >
@@ -86,7 +94,7 @@ export function OfficialTemplatesSection({
             </h3>
             <p
               style={{
-                margin: "0.55rem 0 0",
+                margin: 0,
                 color: "#4b453d",
               }}
             >
@@ -94,13 +102,14 @@ export function OfficialTemplatesSection({
             </p>
             <p
               style={{
-                margin: "0.7rem 0 0",
+                margin: 0,
                 color: "#5a544d",
               }}
             >
-              {template.intervalCount} intervals • {formatDuration(template.totalSeconds)}
+              {template.intervalCount} intervals |{" "}
+              {formatDuration(template.totalSeconds)}
             </p>
-          </article>
+          </Link>
         ))}
       </div>
     </section>

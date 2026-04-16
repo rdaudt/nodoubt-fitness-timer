@@ -8,11 +8,14 @@ import { getAuthContext } from "../../auth/server/get-auth-context";
 import type { ProfileDisplayRecord } from "../../profiles/contracts/profile";
 import type { OfficialTemplatePreview } from "../../templates/contracts/official-template";
 import {
+  listMockOfficialTemplateRows,
   listOfficialTemplatesSpec,
   toOfficialTemplatePreview,
   type OfficialTemplateRow,
 } from "../../templates/repositories/official-templates";
 import {
+  getPersonalTimerSourceLabel,
+  listMockPersonalTimerRows,
   listPersonalTimersSpec,
   mapPersonalTimerRow,
   type PersonalTimerRow,
@@ -22,37 +25,6 @@ const officialTemplateSelect =
   "id, slug, title, summary, workout_type, difficulty, interval_count, total_seconds, intervals, created_at, updated_at";
 const personalTimerSelect =
   "id, owner_id, name, description, is_draft, source, source_template_id, definition_version, intervals, total_seconds, created_at, updated_at";
-
-const fallbackOfficialTemplates: OfficialTemplatePreview[] = [
-  {
-    id: "template-hustle-15",
-    slug: "hustle-15",
-    title: "Hustle 15",
-    summary: "Quick HIIT starter with short recoveries and a clean cool-down.",
-    workoutType: "hiit",
-    intervalCount: 12,
-    totalSeconds: 900,
-  },
-  {
-    id: "template-strength-ladder",
-    slug: "strength-ladder",
-    title: "Strength Ladder",
-    summary:
-      "Alternating work and recovery blocks for a steady strength-focused pace.",
-    workoutType: "strength",
-    intervalCount: 10,
-    totalSeconds: 1080,
-  },
-  {
-    id: "template-reset-flow",
-    slug: "reset-flow",
-    title: "Reset Flow",
-    summary: "Mobility intervals for warmup days, resets, and post-lift recovery.",
-    workoutType: "mobility",
-    intervalCount: 8,
-    totalSeconds: 720,
-  },
-];
 
 export interface PersonalTimerSummary {
   id: string;
@@ -126,7 +98,9 @@ function buildMyTimersSection(
 
 async function defaultLoadOfficialTemplates() {
   if (isAuthTestMode() || !getSupabaseEnv()) {
-    return fallbackOfficialTemplates;
+    return listMockOfficialTemplateRows().map((row) =>
+      toOfficialTemplatePreview(row),
+    );
   }
 
   try {
@@ -144,41 +118,40 @@ async function defaultLoadOfficialTemplates() {
     });
 
     if (error || !data?.length) {
-      return fallbackOfficialTemplates;
+      return listMockOfficialTemplateRows().map((row) =>
+        toOfficialTemplatePreview(row),
+      );
     }
 
     return (data as OfficialTemplateRow[]).map((row) =>
       toOfficialTemplatePreview(row),
     );
   } catch {
-    return fallbackOfficialTemplates;
+    return listMockOfficialTemplateRows().map((row) =>
+      toOfficialTemplatePreview(row),
+    );
   }
-}
-
-function buildMockPersonalTimers(userId: string): PersonalTimerSummary[] {
-  return [
-    {
-      id: `${userId}-timer-1`,
-      name: "Monday Burn",
-      isDraft: false,
-      totalSeconds: 1260,
-      sourceLabel: "Saved timer",
-    },
-    {
-      id: `${userId}-timer-2`,
-      name: "Mobility Reset Draft",
-      isDraft: true,
-      totalSeconds: 780,
-      sourceLabel: "Draft",
-    },
-  ];
 }
 
 async function defaultLoadPersonalTimers(
   authContext: SignedInAuthContext,
 ): Promise<PersonalTimerSummary[]> {
   if (isAuthTestMode()) {
-    return buildMockPersonalTimers(authContext.userId);
+    return listMockPersonalTimerRows({ userId: authContext.userId }).map(
+      (row) => {
+        const timer = mapPersonalTimerRow(row);
+
+        return {
+          id: timer.id,
+          name: timer.name,
+          isDraft: timer.isDraft,
+          totalSeconds: timer.totalSeconds,
+          sourceLabel: timer.isDraft
+            ? "Draft"
+            : getPersonalTimerSourceLabel(timer),
+        };
+      },
+    );
   }
 
   if (!getSupabaseEnv()) {
