@@ -1,7 +1,12 @@
 import Link from "next/link";
 
 import { TimerEditorScreen } from "../../../../../components/editor/timer-editor-screen";
+import { getAuthContext } from "../../../../../src/features/auth/server/get-auth-context";
 import { getEditorViewModel } from "../../../../../src/features/editor/server/get-editor-view-model";
+import {
+  saveEditorDraft,
+  type SaveEditorDraftInput,
+} from "../../../../../src/features/editor/server/save-editor-draft";
 
 export const dynamic = "force-dynamic";
 
@@ -21,6 +26,7 @@ export default async function TimerEditPage({
   const { id } = await params;
   const resolvedSearchParams = searchParams ? await searchParams : undefined;
   const viewModel = await getEditorViewModel(id, resolvedSearchParams?.notice);
+  const auth = await getAuthContext();
 
   if (viewModel.state !== "ready" || !viewModel.initialState) {
     return (
@@ -102,11 +108,21 @@ export default async function TimerEditPage({
 
   return (
     <TimerEditorScreen
+      timerId={id}
       profile={viewModel.profile}
       authStatusLabel={viewModel.authStatusLabel}
       initialState={viewModel.initialState}
       notice={viewModel.notice}
       backHref={`/timers/${id}`}
+      onAutoSave={
+        auth.kind === "signed-in"
+          ? async (input: SaveEditorDraftInput) => {
+              "use server";
+
+              return saveEditorDraft(auth, input);
+            }
+          : undefined
+      }
     />
   );
 }

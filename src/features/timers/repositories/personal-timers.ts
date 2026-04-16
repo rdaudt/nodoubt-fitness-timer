@@ -302,6 +302,51 @@ export function renameMockPersonalTimerRow(
   return renamedRow ? clonePersonalTimerRow(renamedRow) : null;
 }
 
+export function updateMockPersonalTimerRow(
+  session: OwnerSession | null | undefined,
+  timerId: string,
+  updates: Partial<{
+    name: string;
+    description: string | null;
+    isDraft: boolean;
+    intervals: TimerRecord["intervals"];
+    totalSeconds: number;
+  }>,
+): PersonalTimerRow | null {
+  const ownerId = assertAuthenticatedOwner(session);
+  const rows = mockPersonalTimerStore.get(ownerId) ?? createSeededMockTimers(ownerId);
+
+  if (!mockPersonalTimerStore.has(ownerId)) {
+    mockPersonalTimerStore.set(ownerId, rows);
+  }
+
+  let updatedRow: PersonalTimerRow | null = null;
+  const nextRows = rows.map((row) => {
+    if (row.id !== timerId) {
+      return row;
+    }
+
+    updatedRow = {
+      ...row,
+      name: updates.name?.trim() ? updates.name.trim() : row.name,
+      description:
+        updates.description === undefined ? row.description : updates.description,
+      is_draft: updates.isDraft ?? row.is_draft,
+      intervals: updates.intervals
+        ? updates.intervals.map((interval) => cloneInterval(interval))
+        : row.intervals,
+      total_seconds: updates.totalSeconds ?? row.total_seconds,
+      updated_at: new Date().toISOString(),
+    };
+
+    return updatedRow;
+  });
+
+  mockPersonalTimerStore.set(ownerId, nextRows);
+
+  return updatedRow ? clonePersonalTimerRow(updatedRow) : null;
+}
+
 export function deleteMockPersonalTimerRow(
   session: OwnerSession | null | undefined,
   timerId: string,

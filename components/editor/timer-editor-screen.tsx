@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 
 import Link from "next/link";
 
@@ -12,16 +12,19 @@ import {
   type EditorState,
 } from "../../src/features/editor/client/editor-state";
 import { deriveTotalSeconds } from "../../src/features/editor/client/derive-total-seconds";
+import type { SaveEditorDraftInput } from "../../src/features/editor/server/save-editor-draft";
 import { ProfileChip } from "../header/profile-chip";
 import { IntervalForm } from "./interval-form";
 import { IntervalList } from "./interval-list";
 
 interface TimerEditorScreenProps {
+  timerId: string;
   profile: ProfileDisplayRecord | null;
   authStatusLabel: "Guest" | "Signed In";
   initialState: EditorState;
   notice?: string | null;
   backHref: string;
+  onAutoSave?: (input: SaveEditorDraftInput) => Promise<{ savedAt: string }>;
 }
 
 function formatDuration(totalSeconds: number) {
@@ -32,14 +35,21 @@ function formatDuration(totalSeconds: number) {
 }
 
 export function TimerEditorScreen({
+  timerId,
   profile,
   authStatusLabel,
   initialState,
   notice,
   backHref,
+  onAutoSave,
 }: TimerEditorScreenProps) {
   const [editorState, setEditorState] = useState(initialState);
   const [editingIntervalId, setEditingIntervalId] = useState<string | null>(null);
+  const [lastSavedAt, setLastSavedAt] = useState<string | null>(null);
+  const [autoSaveError, setAutoSaveError] = useState<string | null>(null);
+  const [isAutoSaving, startAutoSave] = useTransition();
+  const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const saveSequenceRef = useRef(0);
   const activeInterval = useMemo<EditorIntervalDraft | null>(
     () =>
       editorState.intervals.find((interval) => interval.id === editingIntervalId) ??
@@ -76,6 +86,46 @@ export function TimerEditorScreen({
       );
     });
   }
+
+  useEffect(() => {
+    if (!onAutoSave || authStatusLabel !== "Signed In") {
+      return;
+    }
+
+    if (saveTimeoutRef.current) {
+      clearTimeout(saveTimeoutRef.current);
+    }
+
+    const sequence = saveSequenceRef.current + 1;
+    saveSequenceRef.current = sequence;
+    const nextState = editorState;
+
+    saveTimeoutRef.current = setTimeout(() => {
+      startAutoSave(async () => {
+        try {
+          const result = await onAutoSave({
+            timerId,
+            editorState: nextState,
+          });
+
+          if (saveSequenceRef.current === sequence) {
+            setLastSavedAt(result.savedAt);
+            setAutoSaveError(null);
+          }
+        } catch {
+          if (saveSequenceRef.current === sequence) {
+            setAutoSaveError("Autosave failed. Keep editing and try again.");
+          }
+        }
+      });
+    }, 700);
+
+    return () => {
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+    };
+  }, [authStatusLabel, editorState, onAutoSave, startAutoSave, timerId]);
 
   return (
     <section
@@ -229,6 +279,29 @@ export function TimerEditorScreen({
             >
               {editorState.structure.rounds} rounds
             </span>
+            {authStatusLabel === "Signed In" ? (
+              <span
+                data-testid="editor-autosave-status"
+                style={{
+                  borderRadius: "999px",
+                  padding: "0.35rem 0.6rem",
+                  backgroundColor: isAutoSaving
+                    ? "rgba(126, 182, 217, 0.22)"
+                    : "rgba(142, 197, 166, 0.24)",
+                  color: "#2d4e4d",
+                  fontSize: "0.85rem",
+                  fontWeight: 600,
+                }}
+              >
+                {autoSaveError
+                  ? autoSaveError
+                  : isAutoSaving
+                    ? "Autosaving..."
+                    : lastSavedAt
+                      ? "Draft saved"
+                      : "Draft autosave ready"}
+              </span>
+            ) : null}
           </div>
         </div>
       </header>
