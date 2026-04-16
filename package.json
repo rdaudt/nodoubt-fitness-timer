@@ -7,12 +7,15 @@
     "doc": "docs"
   },
   "scripts": {
+    "dev": "next dev --hostname 127.0.0.1 --port 3000",
+    "build": "next build",
+    "start": "next start --hostname 127.0.0.1 --port 3000",
     "test": "npm run test:phase1",
     "test:unit": "vitest run --config vitest.config.ts --project unit --passWithNoTests",
     "test:integration": "vitest run --config vitest.config.ts --project integration --passWithNoTests",
     "test:e2e": "playwright test --config playwright.config.ts --pass-with-no-tests",
     "test:browser": "npm run test:e2e",
-    "test:phase1": "vitest run --config vitest.config.ts --passWithNoTests"
+    "test:phase1": "node ./scripts/test-phase1.mjs"
   },
   "repository": {
     "type": "git",
@@ -29,8 +32,17 @@
   "devDependencies": {
     "@playwright/test": "^1.59.1",
     "@types/node": "^25.6.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
     "playwright": "^1.59.1",
     "typescript": "^6.0.2",
     "vitest": "^4.1.4"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.10.2",
+    "@supabase/supabase-js": "^2.103.3",
+    "next": "^16.2.4",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5"
   }
 }
