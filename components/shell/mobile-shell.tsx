@@ -16,6 +16,12 @@ const navItems = [
     testId: "nav-home",
   },
   {
+    href: "/create",
+    label: "Create",
+    testId: "nav-create",
+    isPrimary: true,
+  },
+  {
     href: "/library",
     label: "Library",
     testId: "nav-library",
@@ -79,7 +85,7 @@ export function MobileShell({ children }: MobileShellProps) {
             position: "sticky",
             bottom: "max(0.85rem, env(safe-area-inset-bottom))",
             display: "grid",
-            gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+            gridTemplateColumns: "1fr 1.15fr 1fr 1fr",
             gap: "0.75rem",
             padding: "0.8rem",
             borderRadius: "1.5rem",
@@ -98,13 +104,17 @@ export function MobileShell({ children }: MobileShellProps) {
                 aria-current={isActive ? "page" : undefined}
                 style={{
                   borderRadius: "1rem",
-                  padding: "0.85rem 1rem",
+                  padding: item.isPrimary ? "0.95rem 1rem" : "0.85rem 1rem",
                   textAlign: "center",
                   textDecoration: "none",
                   fontWeight: 700,
                   letterSpacing: "0.04em",
-                  color: isActive ? "#1c1814" : "#f8ecda",
-                  backgroundColor: isActive ? "#f2bb67" : "transparent",
+                  color: isActive || item.isPrimary ? "#1c1814" : "#f8ecda",
+                  backgroundColor:
+                    isActive || item.isPrimary ? "#f2bb67" : "transparent",
+                  boxShadow: item.isPrimary
+                    ? "0 12px 20px rgba(242, 187, 103, 0.28)"
+                    : "none",
                 }}
               >
                 {item.label}

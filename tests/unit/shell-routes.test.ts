@@ -15,6 +15,7 @@ describe("shell-routes", () => {
     expect(shellLayout).toContain("MobileShell");
     expect(mobileShell).toContain('data-testid="bottom-navigation"');
     expect(mobileShell).toContain('href: "/"');
+    expect(mobileShell).toContain('href: "/create"');
     expect(mobileShell).toContain('href: "/templates"');
   });
 
