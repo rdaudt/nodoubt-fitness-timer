@@ -1,70 +1,86 @@
-import { getAuthContext } from "../../../src/features/auth/server/get-auth-context";
+import { OfficialTemplatesSection } from "../../../components/home/official-templates-section";
+import { ProfileChip } from "../../../components/header/profile-chip";
+import { getHomeViewModel } from "../../../src/features/home/server/get-home-view-model";
 
 export const dynamic = "force-dynamic";
 
 export default async function TemplatesPage() {
-  const authContext = await getAuthContext();
+  const viewModel = await getHomeViewModel();
+  const officialTemplatesSection = viewModel.sections.find(
+    (section) => section.kind === "official-templates",
+  );
 
   return (
-    <main
+    <section
       style={{
         display: "grid",
-        gap: "1rem",
+        gap: "1.25rem",
       }}
     >
-      <div>
-        <p
-          style={{
-            margin: 0,
-            fontSize: "0.78rem",
-            fontWeight: 700,
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            color: "#8c5c16",
-          }}
-        >
-          Official library
-        </p>
-        <h1
-          style={{
-            margin: "0.35rem 0 0",
-            fontSize: "2rem",
-          }}
-        >
-          Templates
-        </h1>
-      </div>
+      <header
+        style={{
+          display: "flex",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+          gap: "1rem",
+        }}
+      >
+        <div>
+          <p
+            data-testid="auth-status"
+            style={{
+              display: "inline-flex",
+              margin: 0,
+              padding: "0.35rem 0.65rem",
+              borderRadius: "999px",
+              fontSize: "0.78rem",
+              fontWeight: 700,
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+              backgroundColor:
+                viewModel.auth.kind === "signed-in"
+                  ? "rgba(27, 111, 92, 0.13)"
+                  : "rgba(140, 92, 22, 0.12)",
+              color:
+                viewModel.auth.kind === "signed-in" ? "#1b6f5c" : "#8c5c16",
+            }}
+          >
+            {viewModel.authStatusLabel}
+          </p>
+          <h1
+            style={{
+              margin: "0.45rem 0 0",
+              fontSize: "2rem",
+            }}
+          >
+            Official Templates
+          </h1>
+        </div>
+        {viewModel.profile ? (
+          <ProfileChip profile={viewModel.profile} />
+        ) : null}
+      </header>
       <p
-        data-testid="templates-route-status"
         style={{
           margin: 0,
           color: "#5a544d",
         }}
       >
-        {authContext.kind === "signed-in"
-          ? `Signed in as ${authContext.profile.firstName}`
-          : "Guests can browse official NoDoubt Fitness templates here."}
+        Browse the public No Doubt Fitness starters without leaving the shared
+        shell.
       </p>
-      <section
-        style={{
-          borderRadius: "1.5rem",
-          backgroundColor: "rgba(255, 255, 255, 0.74)",
-          padding: "1.25rem",
-          boxShadow: "0 24px 48px rgba(69, 40, 5, 0.08)",
-        }}
-      >
-        <h2
+      {officialTemplatesSection ? (
+        <OfficialTemplatesSection section={officialTemplatesSection} />
+      ) : (
+        <p
           style={{
-            marginTop: 0,
+            margin: 0,
+            color: "#5a544d",
           }}
         >
-          Shell route ready
-        </h2>
-        <p style={{ marginBottom: 0, color: "#4f493f" }}>
-          This route stays inside the shared mobile shell so template browsing
-          keeps the same bottom navigation and safe-area framing as home.
+          Official templates are temporarily unavailable.
         </p>
-      </section>
-    </main>
+      )}
+    </section>
   );
 }

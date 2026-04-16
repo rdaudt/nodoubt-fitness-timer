@@ -1,10 +1,10 @@
-import { SessionBoundary } from "../../src/features/auth/components/session-boundary";
-import { getAuthContext } from "../../src/features/auth/server/get-auth-context";
+import { HomeScreen } from "../../components/home/home-screen";
+import { getHomeViewModel } from "../../src/features/home/server/get-home-view-model";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const authContext = await getAuthContext();
+  const viewModel = await getHomeViewModel();
 
-  return <SessionBoundary authContext={authContext} />;
+  return <HomeScreen viewModel={viewModel} />;
 }
