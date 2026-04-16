@@ -1,15 +1,16 @@
 import { spawnSync } from "node:child_process";
 
-const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
+const isWindows = process.platform === "win32";
 const forwardedArgs = process.argv.slice(2);
 
-function run(label, args) {
-  const result = process.platform === "win32"
-    ? spawnSync(process.env.ComSpec ?? "cmd.exe", ["/d", "/s", "/c", npmCommand, ...args], {
+function run(command, args) {
+  const executable = isWindows ? `${command}.cmd` : command;
+  const result = isWindows
+    ? spawnSync(process.env.ComSpec ?? "cmd.exe", ["/d", "/s", "/c", executable, ...args], {
         stdio: "inherit",
         shell: false,
       })
-    : spawnSync(npmCommand, args, {
+    : spawnSync(executable, args, {
         stdio: "inherit",
         shell: false,
       });
@@ -33,17 +34,25 @@ function buildArgs(label, baseArgs) {
     ]);
   }
 
-  return forwardedArgs.map((filter) => [...baseArgs, "--", "--grep", filter]);
+  const grepPattern = forwardedArgs
+    .map((filter) => filter.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+    .join("|");
+
+  return [[...baseArgs, "--grep", grepPattern]];
 }
 
 const testRuns = [
-  ["unit", ["run", "test:unit"]],
-  ["integration", ["run", "test:integration"]],
-  ["e2e", ["run", "test:e2e"]],
+  ["unit", "npm", ["run", "test:unit"]],
+  ["integration", "npm", ["run", "test:integration"]],
+  [
+    "e2e",
+    "npx",
+    ["playwright", "test", "--config", "playwright.config.ts", "--pass-with-no-tests"],
+  ],
 ];
 
-for (const [label, baseArgs] of testRuns) {
+for (const [label, command, baseArgs] of testRuns) {
   for (const args of buildArgs(label, baseArgs)) {
-    run(label, args);
+    run(command, args);
   }
 }
