@@ -147,6 +147,7 @@ export default async function TemplateDetailPage({
         >
           <Link
             href={`/run?templateSlug=${slug}`}
+            data-testid="template-run-now"
             style={{
               borderRadius: "1rem",
               padding: "0.85rem 0.9rem",
@@ -157,7 +158,7 @@ export default async function TemplateDetailPage({
               color: "#f8ecda",
             }}
           >
-            Run
+            Run now
           </Link>
           <form action={duplicateTemplateAction}>
             <input type="hidden" name="slug" value={slug} />
@@ -215,3 +216,4 @@ export default async function TemplateDetailPage({
 
   return <TimerDetailScreen viewModel={viewModel} actions={actions} />;
 }
+

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import type { RunSessionSnapshot } from "../../src/features/run/contracts/run-session";
 import type { RunSequence } from "../../src/features/run/contracts/run-sequence";
@@ -10,6 +11,7 @@ import {
   writeRunSessionSnapshot,
 } from "../../src/features/run/client/run-session-store";
 import { useRunEngine } from "../../src/features/run/client/use-run-engine";
+import { CompletionScreen } from "./completion-screen";
 import { RunControls } from "./run-controls";
 
 const ACTIVE_RUN_COOKIE_NAME = "ndft-active-run";
@@ -61,6 +63,7 @@ function clearActiveRunCookie() {
 }
 
 export function RunScreen({ sequence, notice }: RunScreenProps) {
+  const router = useRouter();
   const [initialSession, setInitialSession] = useState<RunSessionSnapshot | null>(
     null,
   );
@@ -119,6 +122,7 @@ export function RunScreen({ sequence, notice }: RunScreenProps) {
     if (engine.frame.state === "completed") {
       setControlsLocked(false);
       setResetConfirming(false);
+      setRunInactive(true);
     }
   }, [engine.frame.state]);
 
@@ -148,6 +152,24 @@ export function RunScreen({ sequence, notice }: RunScreenProps) {
     clearRunSessionSnapshot();
     clearActiveRunCookie();
   };
+
+  if (engine.frame.state === "completed") {
+    return (
+      <CompletionScreen
+        title={sequence.title}
+        elapsedLabel={formatDuration(engine.session.lastElapsedMs)}
+        onRunAgain={() => {
+          setRunInactive(false);
+          engine.reset();
+        }}
+        onReturnHome={() => {
+          clearRunSessionSnapshot();
+          clearActiveRunCookie();
+          router.push("/");
+        }}
+      />
+    );
+  }
 
   return (
     <section
@@ -233,9 +255,7 @@ export function RunScreen({ sequence, notice }: RunScreenProps) {
         >
           {engine.frame.currentInterval
             ? engine.frame.currentInterval.label
-            : engine.frame.state === "prep"
-              ? "Get ready"
-              : "Workout complete"}
+            : "Get ready"}
         </p>
         <p
           data-testid="run-next-interval"

@@ -258,6 +258,7 @@ export default async function TimerDetailPage({
         >
           <Link
             href={`/run?timerId=${id}`}
+            data-testid="detail-run-now"
             style={{
               borderRadius: "1rem",
               padding: "0.85rem 0.9rem",
@@ -268,7 +269,7 @@ export default async function TimerDetailPage({
               color: "#f8ecda",
             }}
           >
-            Run
+            Run now
           </Link>
           <Link
             href={`/timers/${id}/edit`}
@@ -390,3 +391,4 @@ export default async function TimerDetailPage({
 
   return <TimerDetailScreen viewModel={viewModel} actions={actions} />;
 }
+

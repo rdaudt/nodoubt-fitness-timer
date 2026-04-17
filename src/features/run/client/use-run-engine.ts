@@ -203,7 +203,10 @@ export function applyRunControlAction(
 }
 
 export function useRunEngine(sequence: RunSequence, options: RunEngineOptions = {}) {
-  const clock = options.clock ?? defaultClock();
+  const clock = useMemo(
+    () => options.clock ?? defaultClock(),
+    [options.clock],
+  );
   const tickMs = options.tickMs ?? DEFAULT_TICK_MS;
   const [session, setSession] = useState<RunSessionSnapshot>(() =>
     resolveInitialSession(sequence, options.initialSession, clock),

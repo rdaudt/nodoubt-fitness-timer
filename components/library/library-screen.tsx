@@ -334,6 +334,44 @@ export function LibraryScreen({
               >
                 Updated {formatUpdatedAt(timer.updatedAt)}
               </p>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                  gap: "0.6rem",
+                }}
+              >
+                <Link
+                  href={`/run?timerId=${timer.id}`}
+                  data-testid={`library-run-now-${timer.id}`}
+                  style={{
+                    textDecoration: "none",
+                    textAlign: "center",
+                    borderRadius: "0.95rem",
+                    padding: "0.75rem 0.85rem",
+                    backgroundColor: "#1c1814",
+                    color: "#f8ecda",
+                    fontWeight: 700,
+                  }}
+                >
+                  Run now
+                </Link>
+                <Link
+                  href={timer.detailHref}
+                  style={{
+                    textDecoration: "none",
+                    textAlign: "center",
+                    borderRadius: "0.95rem",
+                    padding: "0.75rem 0.85rem",
+                    border: "1px solid rgba(140, 92, 22, 0.18)",
+                    color: "#1c1814",
+                    fontWeight: 700,
+                    backgroundColor: "rgba(255, 255, 255, 0.75)",
+                  }}
+                >
+                  Review
+                </Link>
+              </div>
               {actions[timer.id] ? <div>{actions[timer.id]}</div> : null}
             </article>
           ))}
