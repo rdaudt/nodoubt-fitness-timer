@@ -73,6 +73,7 @@ export function RunScreen({ sequence, notice }: RunScreenProps) {
   const [resetConfirming, setResetConfirming] = useState(false);
   const [runInactive, setRunInactive] = useState(false);
   const [feedbackPrimed, setFeedbackPrimed] = useState(false);
+  const [capabilityNoticeReady, setCapabilityNoticeReady] = useState(false);
 
   useEffect(() => {
     const restoredSession = readRunSessionSnapshot();
@@ -98,6 +99,10 @@ export function RunScreen({ sequence, notice }: RunScreenProps) {
   const engine = useRunEngine(sequence, {
     initialSession,
   });
+
+  useEffect(() => {
+    setCapabilityNoticeReady(true);
+  }, []);
 
   useEffect(() => {
     if (!sessionReady) {
@@ -239,7 +244,9 @@ export function RunScreen({ sequence, notice }: RunScreenProps) {
           {notice}
         </p>
       ) : null}
-      <RunCapabilityNotice capabilities={engine.capabilities} />
+      {capabilityNoticeReady ? (
+        <RunCapabilityNotice capabilities={engine.capabilities} />
+      ) : null}
       <div
         style={{
           display: "grid",

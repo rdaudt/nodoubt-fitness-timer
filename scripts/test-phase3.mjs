@@ -15,9 +15,10 @@ function run(command, args) {
 }
 
 const phase3Runs = [
-  ["npm", ["run", "test:unit", "--", "run-"]],
-  ["npm", ["run", "test:integration", "--", "run-"]],
+  ["npm", ["run", "test:unit", "--", "run-", "device-feedback"]],
+  ["npm", ["run", "test:integration", "--", "run-", "run-capability-fallback"]],
   ["npm", ["run", "test:e2e", "--", "phase3-run-controls"]],
+  ["npm", ["run", "test:e2e", "--", "phase3-device-feedback"]],
 ];
 
 for (const [command, args] of phase3Runs) {
