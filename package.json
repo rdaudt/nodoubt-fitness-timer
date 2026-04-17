@@ -16,7 +16,8 @@
     "test:e2e": "playwright test --config playwright.config.ts --pass-with-no-tests",
     "test:browser": "npm run test:e2e",
     "test:phase1": "node ./scripts/test-phase1.mjs",
-    "test:phase2": "node ./scripts/test-phase2.mjs"
+    "test:phase2": "node ./scripts/test-phase2.mjs",
+    "test:phase3": "node ./scripts/test-phase3.mjs"
   },
   "repository": {
     "type": "git",
