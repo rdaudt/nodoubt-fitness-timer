@@ -23,13 +23,13 @@
 - [ ] **LIBR-06**: Signed-in user can see draft timers clearly labeled in the main timer library.
 - [x] **LIBR-07**: Guest user home prioritizes official NoDoubt Fitness templates instead of an empty personal-library state.
 - [x] **LIBR-08**: Signed-in user home shows `My Timers` first and official templates in a separate section.
-- [ ] **LIBR-09**: User can start a timer directly from an explicit `Run now` action on home or library cards while card review remains available through the detail flow.
+- [x] **LIBR-09**: User can start a timer directly from an explicit `Run now` action on home or library cards while card review remains available through the detail flow.
 
 ### Official Templates
 
 - [x] **TMPL-01**: Guest and signed-in users can browse official NoDoubt Fitness starter templates.
 - [ ] **TMPL-02**: User can open an official template detail screen and review its interval breakdown before running it.
-- [ ] **TMPL-03**: User can run an official template immediately without editing it.
+- [x] **TMPL-03**: User can run an official template immediately without editing it.
 - [ ] **TMPL-04**: User can duplicate an official template into a personal timer before editing it.
 - [ ] **TMPL-05**: User edits to a duplicated official template remain independent from the original template.
 
@@ -59,11 +59,11 @@
 - [ ] **EDIT-09**: User can see total workout duration while editing.
 - [ ] **EDIT-10**: Signed-in user timer edits auto-save without a manual save step.
 - [ ] **EDIT-11**: Signed-in user can leave an incomplete timer and later find it as a draft.
-- [ ] **EDIT-12**: User cannot edit a timer while it is actively running.
+- [x] **EDIT-12**: User cannot edit a timer while it is actively running.
 
 ### Run Experience
 
-- [ ] **RUN-01**: User can start a timer from the detail screen or completion of a creation flow.
+- [x] **RUN-01**: User can start a timer from the detail screen or completion of a creation flow.
 - [x] **RUN-02**: Run mode shows the current interval name and current interval time remaining prominently.
 - [x] **RUN-03**: Run mode shows the next interval before the current interval completes.
 - [x] **RUN-04**: Run mode shows the total workout time remaining.
@@ -72,9 +72,9 @@
 - [x] **RUN-07**: User can pause and resume an active workout without losing timing accuracy.
 - [x] **RUN-08**: User can move to the previous or next interval during a workout.
 - [x] **RUN-09**: User can reset an in-progress workout after confirmation.
-- [ ] **RUN-10**: User can optionally lock workout controls during playback.
-- [ ] **RUN-11**: User sees a completion screen with timer name, completed duration, a primary path back home, and a secondary `Run again` action.
-- [ ] **RUN-12**: Run mode is optimized for portrait mobile use and hides nonessential app chrome.
+- [x] **RUN-10**: User can optionally lock workout controls during playback.
+- [x] **RUN-11**: User sees a completion screen with timer name, completed duration, a primary path back home, and a secondary `Run again` action.
+- [x] **RUN-12**: Run mode is optimized for portrait mobile use and hides nonessential app chrome.
 - [x] **RUN-13**: Workout session state survives a refresh while the page remains open.
 
 ### Alerts & Device Feedback
@@ -96,7 +96,7 @@
 ### Branding, Privacy & Analytics
 
 - [ ] **BRND-01**: User experiences the app as an official NoDoubt Fitness product through the shell, onboarding, templates, and supporting surfaces.
-- [ ] **BRND-02**: Branding recedes during active run mode so workout readability remains primary.
+- [x] **BRND-02**: Branding recedes during active run mode so workout readability remains primary.
 - [ ] **BRND-03**: User sees lightweight NoDoubt Fitness coaching / Instagram CTAs on non-critical surfaces such as home and completion without interrupting workout flow.
 - [x] **PRIV-01**: Authenticated user can access only their own private timers and drafts.
 - [ ] **ANLY-01**: The product records basic analytics for sign-ins, timer starts, timer completions, official template usage, and coaching / Instagram CTA clicks.
@@ -170,10 +170,10 @@
 | LIBR-06 | Phase 2 | Pending |
 | LIBR-07 | Phase 1 | Complete |
 | LIBR-08 | Phase 1 | Complete |
-| LIBR-09 | Phase 3 | Pending |
+| LIBR-09 | Phase 3 | Complete |
 | TMPL-01 | Phase 1 | Complete |
 | TMPL-02 | Phase 2 | Pending |
-| TMPL-03 | Phase 3 | Pending |
+| TMPL-03 | Phase 3 | Complete |
 | TMPL-04 | Phase 2 | Pending |
 | TMPL-05 | Phase 2 | Pending |
 | CRTE-01 | Phase 2 | Pending |
@@ -197,8 +197,8 @@
 | EDIT-09 | Phase 2 | Pending |
 | EDIT-10 | Phase 2 | Pending |
 | EDIT-11 | Phase 2 | Pending |
-| EDIT-12 | Phase 3 | Pending |
-| RUN-01 | Phase 3 | Pending |
+| EDIT-12 | Phase 3 | Complete |
+| RUN-01 | Phase 3 | Complete |
 | RUN-02 | Phase 3 | Complete |
 | RUN-03 | Phase 3 | Complete |
 | RUN-04 | Phase 3 | Complete |
@@ -207,9 +207,9 @@
 | RUN-07 | Phase 3 | Complete |
 | RUN-08 | Phase 3 | Complete |
 | RUN-09 | Phase 3 | Complete |
-| RUN-10 | Phase 3 | Pending |
-| RUN-11 | Phase 3 | Pending |
-| RUN-12 | Phase 3 | Pending |
+| RUN-10 | Phase 3 | Complete |
+| RUN-11 | Phase 3 | Complete |
+| RUN-12 | Phase 3 | Complete |
 | RUN-13 | Phase 3 | Complete |
 | ALRT-01 | Phase 3 | Pending |
 | ALRT-02 | Phase 3 | Pending |
@@ -222,7 +222,7 @@
 | SETG-04 | Phase 5 | Pending |
 | SETG-05 | Phase 5 | Pending |
 | BRND-01 | Phase 5 | Pending |
-| BRND-02 | Phase 3 | Pending |
+| BRND-02 | Phase 3 | Complete |
 | BRND-03 | Phase 5 | Pending |
 | PRIV-01 | Phase 1 | Complete |
 | ANLY-01 | Phase 5 | Pending |

@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: in_progress
-stopped_at: Completed 03-01-PLAN.md
-last_updated: "2026-04-17T06:16:42.575Z"
-last_activity: 2026-04-16 - Completed 03-01 deterministic run engine foundations and refresh-safe session recovery.
+status: executing
+stopped_at: Completed 03-02-PLAN.md
+last_updated: "2026-04-17T06:40:23.375Z"
+last_activity: 2026-04-16 - Completed 03-02 run UI, entry points, completion flow, and active-run edit lock guardrails.
 progress:
   total_phases: 5
   completed_phases: 2
   total_plans: 9
-  completed_plans: 7
-  percent: 78
+  completed_plans: 8
+  percent: 89
 ---
 
 # Project State
@@ -26,18 +26,18 @@ See: .planning/PROJECT.md (updated 2026-04-15)
 ## Current Position
 
 Phase: 3 of 5 (Deterministic Run Engine and Playback)
-Plan: 1 of 3 in current phase
+Plan: 2 of 3 in current phase
 Status: In progress
-Last activity: 2026-04-16 - Completed 03-01 deterministic sequence compiler, elapsed-time run engine, and session recovery bootstrap.
+Last activity: 2026-04-16 - Completed 03-02 run UI, entry points, completion flow, and active-run edit lock guardrails.
 
-Progress: [¦¦¦¦¦¦¦¦¦¦] 78%
+Progress: [ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½] 89%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 7
-- Average duration: 15.4 min
-- Total execution time: 1.8 hours
+- Total plans completed: 8
+- Average duration: 15.1 min
+- Total execution time: 2.0 hours
 
 **By Phase:**
 
@@ -45,11 +45,12 @@ Progress: [¦¦¦¦¦¦¦¦¦¦] 78%
 |-------|-------|-------|----------|
 | 01 | 3 | 41 min | 13.7 min |
 | 02 | 3 | 63 min | 21.0 min |
-| 03 | 1 | 4 min | 4.0 min |
+| 03 | 2 | 17 min | 8.5 min |
 
 **Recent Trend:**
-- Last 5 plans: 03-01 (4 min), 02-03 (32 min), 02-02 (11 min), 02-01 (20 min), 01-01 (19 min)
-- Trend: Faster after establishing stable authoring/repository foundations.
+- Last 5 plans: 03-02 (13 min), 03-01 (4 min), 02-03 (32 min), 02-02 (11 min), 02-01 (20 min)
+- Trend: Stable execution cadence with Phase 3 run UX now integrated on top of deterministic engine foundations.
+| Phase 03 P02 | 13 min | 3 tasks | 17 files |
 
 ## Accumulated Context
 
@@ -78,6 +79,9 @@ Recent decisions affecting current work:
 - [Phase 02]: Keep signed-in editor autosave debounced client-side with owner-scoped server draft persistence and visible save-state feedback.
 - [Phase 03]: Run playback timing derives from monotonic elapsed time rather than mutable countdown state. - Monotonic elapsed derivation keeps transitions deterministic through frame drops and pause/resume cycles.
 - [Phase 03]: Run bootstrap compiles personal timers, official templates, and guest seeds through one RunSequence contract. - A single compile path keeps playback math and progress context consistent regardless of run source.
+- [Phase 03]: Use a lightweight ndft-active-run cookie marker so server-rendered detail/editor routes can enforce edit locks while playback is active. â€” Server loaders need a browser-to-server bridge because run sessions are client-side; cookie marker keeps guards deterministic without broad schema changes.
+- [Phase 03]: Treat malformed active-run markers as locked (fail closed) to protect against stale or corrupted client state. â€” Failing closed prevents accidental edit-entry when lock state cannot be trusted.
+- [Phase 03]: Define test:phase3 as a phase-scoped runner for run unit/integration/e2e slices instead of unrelated historical e2e coverage. â€” Phase-level verification should target requirements under execution and stay stable against unrelated legacy e2e flakes.
 
 ### Pending Todos
 
@@ -89,6 +93,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-17T06:16:42.570Z
-Stopped at: Completed 03-01-PLAN.md
+Last session: 2026-04-17T06:40:23.369Z
+Stopped at: Completed 03-02-PLAN.md
 Resume file: None
