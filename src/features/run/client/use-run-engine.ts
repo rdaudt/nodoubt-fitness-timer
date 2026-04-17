@@ -1,10 +1,16 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
+import {
+  createDeviceFeedbackController,
+  type DeviceFeedbackCapabilities,
+  type DeviceFeedbackController,
+} from "./device-feedback";
 import type { RunSessionSnapshot } from "../contracts/run-session";
 import type { RunSequence } from "../contracts/run-sequence";
 import { deriveRunFrame } from "../engine/derive-run-frame";
+import { PLAYBACK_DEFAULTS } from "../contracts/playback-defaults";
 
 export interface RunEngineClock {
   nowMonotonicMs: () => number;
@@ -15,6 +21,7 @@ export interface RunEngineOptions {
   tickMs?: number;
   clock?: RunEngineClock;
   initialSession?: RunSessionSnapshot | null;
+  feedback?: DeviceFeedbackController;
 }
 
 const DEFAULT_TICK_MS = 200;
@@ -207,6 +214,10 @@ export function useRunEngine(sequence: RunSequence, options: RunEngineOptions = 
     () => options.clock ?? defaultClock(),
     [options.clock],
   );
+  const feedback = useMemo(
+    () => options.feedback ?? createDeviceFeedbackController(),
+    [options.feedback],
+  );
   const tickMs = options.tickMs ?? DEFAULT_TICK_MS;
   const [session, setSession] = useState<RunSessionSnapshot>(() =>
     resolveInitialSession(sequence, options.initialSession, clock),
@@ -214,10 +225,18 @@ export function useRunEngine(sequence: RunSequence, options: RunEngineOptions = 
   const [nowMonotonicMs, setNowMonotonicMs] = useState(() =>
     clock.nowMonotonicMs(),
   );
+  const [capabilities, setCapabilities] = useState<DeviceFeedbackCapabilities>(() =>
+    feedback.getCapabilities(),
+  );
+  const previousIntervalIdRef = useRef<string | null>(null);
+  const countdownCueKeysRef = useRef<Set<string>>(new Set());
 
   useEffect(() => {
     setSession(resolveInitialSession(sequence, options.initialSession, clock));
     setNowMonotonicMs(clock.nowMonotonicMs());
+    setCapabilities(feedback.getCapabilities());
+    previousIntervalIdRef.current = null;
+    countdownCueKeysRef.current = new Set();
   }, [clock, options.initialSession, sequence]);
 
   useEffect(() => {
@@ -238,6 +257,71 @@ export function useRunEngine(sequence: RunSequence, options: RunEngineOptions = 
   );
 
   const frame = useMemo(() => deriveRunFrame(sequence, elapsedMs), [elapsedMs, sequence]);
+
+  useEffect(() => {
+    let mounted = true;
+
+    const syncStatus = async () => {
+      await feedback.syncPlaybackStatus(session.status);
+
+      if (mounted) {
+        setCapabilities(feedback.getCapabilities());
+      }
+    };
+
+    void syncStatus();
+
+    return () => {
+      mounted = false;
+    };
+  }, [feedback, session.status]);
+
+  useEffect(() => {
+    if (frame.state !== "running" || session.status !== "running") {
+      previousIntervalIdRef.current = frame.currentInterval?.id ?? null;
+      return;
+    }
+
+    const currentIntervalId = frame.currentInterval?.id ?? null;
+    const previousIntervalId = previousIntervalIdRef.current;
+
+    if (currentIntervalId && currentIntervalId !== previousIntervalId) {
+      feedback.emitTransitionCue();
+      setCapabilities(feedback.getCapabilities());
+      countdownCueKeysRef.current.clear();
+    }
+
+    previousIntervalIdRef.current = currentIntervalId;
+
+    if (!frame.currentInterval) {
+      return;
+    }
+
+    const secondsRemaining = Math.ceil(
+      Math.max(0, frame.progress.intervalRemainingMs) / 1_000,
+    );
+
+    if (!PLAYBACK_DEFAULTS.finalCountdownSeconds.includes(secondsRemaining)) {
+      return;
+    }
+
+    const cueKey = `${frame.currentInterval.id}:${secondsRemaining}`;
+
+    if (countdownCueKeysRef.current.has(cueKey)) {
+      return;
+    }
+
+    feedback.emitFinalCountdownCue(secondsRemaining);
+    countdownCueKeysRef.current.add(cueKey);
+    setCapabilities(feedback.getCapabilities());
+  }, [feedback, frame, session.status]);
+
+  useEffect(
+    () => () => {
+      void feedback.stop();
+    },
+    [feedback],
+  );
 
   useEffect(() => {
     if (frame.state !== "completed" || session.status === "completed") {
@@ -314,9 +398,16 @@ export function useRunEngine(sequence: RunSequence, options: RunEngineOptions = 
     jumpToElapsed(sequence.prepDurationMs + previousInterval.startMs);
   };
 
+  const primeDeviceFeedback = async () => {
+    await feedback.primeFromUserInteraction();
+    setCapabilities(feedback.getCapabilities());
+  };
+
   return {
     session,
     frame,
+    capabilities,
+    primeDeviceFeedback,
     pause,
     resume,
     previous,
