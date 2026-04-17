@@ -12,6 +12,7 @@ import {
 } from "../../src/features/run/client/run-session-store";
 import { useRunEngine } from "../../src/features/run/client/use-run-engine";
 import { CompletionScreen } from "./completion-screen";
+import { RunCapabilityNotice } from "./run-capability-notice";
 import { RunControls } from "./run-controls";
 
 const ACTIVE_RUN_COOKIE_NAME = "ndft-active-run";
@@ -71,6 +72,7 @@ export function RunScreen({ sequence, notice }: RunScreenProps) {
   const [controlsLocked, setControlsLocked] = useState(false);
   const [resetConfirming, setResetConfirming] = useState(false);
   const [runInactive, setRunInactive] = useState(false);
+  const [feedbackPrimed, setFeedbackPrimed] = useState(false);
 
   useEffect(() => {
     const restoredSession = readRunSessionSnapshot();
@@ -174,6 +176,22 @@ export function RunScreen({ sequence, notice }: RunScreenProps) {
   return (
     <section
       data-testid="run-screen"
+      onPointerDownCapture={() => {
+        if (feedbackPrimed) {
+          return;
+        }
+
+        setFeedbackPrimed(true);
+        void engine.primeDeviceFeedback();
+      }}
+      onKeyDownCapture={() => {
+        if (feedbackPrimed) {
+          return;
+        }
+
+        setFeedbackPrimed(true);
+        void engine.primeDeviceFeedback();
+      }}
       style={{
         minHeight: "100vh",
         display: "grid",
@@ -221,6 +239,7 @@ export function RunScreen({ sequence, notice }: RunScreenProps) {
           {notice}
         </p>
       ) : null}
+      <RunCapabilityNotice capabilities={engine.capabilities} />
       <div
         style={{
           display: "grid",
