@@ -79,11 +79,11 @@
 
 ### Alerts & Device Feedback
 
-- [ ] **ALRT-01**: User receives audible transition cues during playback.
-- [ ] **ALRT-02**: User receives a final countdown cue before interval transitions where configured by the product defaults.
-- [ ] **ALRT-03**: User receives vibration feedback on supported devices during playback.
-- [ ] **ALRT-04**: The app degrades gracefully when browser autoplay, vibration, or wake-lock capabilities are unavailable.
-- [ ] **ALRT-05**: The app keeps the screen awake during playback where the browser supports wake lock.
+- [x] **ALRT-01**: User receives audible transition cues during playback.
+- [x] **ALRT-02**: User receives a final countdown cue before interval transitions where configured by the product defaults.
+- [x] **ALRT-03**: User receives vibration feedback on supported devices during playback.
+- [x] **ALRT-04**: The app degrades gracefully when browser autoplay, vibration, or wake-lock capabilities are unavailable.
+- [x] **ALRT-05**: The app keeps the screen awake during playback where the browser supports wake lock.
 
 ### Settings, Profile & Promotion
 
@@ -211,11 +211,11 @@
 | RUN-11 | Phase 3 | Complete |
 | RUN-12 | Phase 3 | Complete |
 | RUN-13 | Phase 3 | Complete |
-| ALRT-01 | Phase 3 | Pending |
-| ALRT-02 | Phase 3 | Pending |
-| ALRT-03 | Phase 3 | Pending |
-| ALRT-04 | Phase 3 | Pending |
-| ALRT-05 | Phase 3 | Pending |
+| ALRT-01 | Phase 3 | Complete |
+| ALRT-02 | Phase 3 | Complete |
+| ALRT-03 | Phase 3 | Complete |
+| ALRT-04 | Phase 3 | Complete |
+| ALRT-05 | Phase 3 | Complete |
 | SETG-01 | Phase 5 | Pending |
 | SETG-02 | Phase 1 | Complete |
 | SETG-03 | Phase 5 | Pending |

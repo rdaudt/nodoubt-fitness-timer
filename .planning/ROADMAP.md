@@ -12,7 +12,7 @@ This roadmap moves No Doubt Fitness Timer from a documentation-first repo to a b
 
 - [x] **Phase 1: Foundation, Access, and Data Boundaries** - Establish the mobile shell, guest/signed-in entry states, Google auth, and private timer ownership rules.
 - [x] **Phase 2: Authoring, Library CRUD, and Drafts** - Deliver timer creation, editing, duplication, detail review, and reusable personal-library workflows.
-- [ ] **Phase 3: Deterministic Run Engine and Playback** - Make timers trustworthy to run from across the room with deterministic timing and device feedback.
+- [x] **Phase 3: Deterministic Run Engine and Playback** - Make timers trustworthy to run from across the room with deterministic timing and device feedback.
 - [ ] **Phase 4: Offline Resilience and PWA Delivery** - Add installability and constrained offline playback for previously loaded timers.
 - [ ] **Phase 5: Settings, Account Lifecycle, and Launch Surfaces** - Finish defaults, account management, analytics, and branded supporting surfaces for launch readiness.
 
@@ -63,9 +63,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 03-01: Build the deterministic sequence compiler and run-state engine from absolute elapsed time.
-- [ ] 03-02: Build the full-screen run UI, controls, entry points, and completion flow.
-- [ ] 03-03: Integrate audio, haptics, wake-lock, and session recovery behavior with browser capability fallbacks.
+- [x] 03-01: Build the deterministic sequence compiler and run-state engine from absolute elapsed time.
+- [x] 03-02: Build the full-screen run UI, controls, entry points, and completion flow.
+- [x] 03-03: Integrate audio, haptics, wake-lock, and session recovery behavior with browser capability fallbacks.
 
 ### Phase 4: Offline Resilience and PWA Delivery
 **Goal**: Users can install the app and rely on previously loaded timers continuing to work offline on the same device within clearly bounded browser constraints.
@@ -105,6 +105,6 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 |-------|----------------|--------|-----------|
 | 1. Foundation, Access, and Data Boundaries | 3/3 | Complete    | 2026-04-16 |
 | 2. Authoring, Library CRUD, and Drafts | 3/3 | Complete    | 2026-04-16 |
-| 3. Deterministic Run Engine and Playback | 2/3 | In Progress |  |
+| 3. Deterministic Run Engine and Playback | 3/3 | Complete | 2026-04-17 |
 | 4. Offline Resilience and PWA Delivery | 0/2 | Not started | - |
 | 5. Settings, Account Lifecycle, and Launch Surfaces | 0/2 | Not started | - |
