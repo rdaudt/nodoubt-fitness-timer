@@ -105,6 +105,6 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 |-------|----------------|--------|-----------|
 | 1. Foundation, Access, and Data Boundaries | 3/3 | Complete    | 2026-04-16 |
 | 2. Authoring, Library CRUD, and Drafts | 3/3 | Complete    | 2026-04-16 |
-| 3. Deterministic Run Engine and Playback | 0/3 | Not started | - |
+| 3. Deterministic Run Engine and Playback | 1/3 | In Progress|  |
 | 4. Offline Resilience and PWA Delivery | 0/2 | Not started | - |
 | 5. Settings, Account Lifecycle, and Launch Surfaces | 0/2 | Not started | - |

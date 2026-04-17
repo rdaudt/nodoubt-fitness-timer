@@ -64,18 +64,18 @@
 ### Run Experience
 
 - [ ] **RUN-01**: User can start a timer from the detail screen or completion of a creation flow.
-- [ ] **RUN-02**: Run mode shows the current interval name and current interval time remaining prominently.
-- [ ] **RUN-03**: Run mode shows the next interval before the current interval completes.
-- [ ] **RUN-04**: Run mode shows the total workout time remaining.
-- [ ] **RUN-05**: Run mode shows current progress context such as interval, round, or set counts.
-- [ ] **RUN-06**: User can use a preparation countdown before the workout begins.
-- [ ] **RUN-07**: User can pause and resume an active workout without losing timing accuracy.
-- [ ] **RUN-08**: User can move to the previous or next interval during a workout.
-- [ ] **RUN-09**: User can reset an in-progress workout after confirmation.
+- [x] **RUN-02**: Run mode shows the current interval name and current interval time remaining prominently.
+- [x] **RUN-03**: Run mode shows the next interval before the current interval completes.
+- [x] **RUN-04**: Run mode shows the total workout time remaining.
+- [x] **RUN-05**: Run mode shows current progress context such as interval, round, or set counts.
+- [x] **RUN-06**: User can use a preparation countdown before the workout begins.
+- [x] **RUN-07**: User can pause and resume an active workout without losing timing accuracy.
+- [x] **RUN-08**: User can move to the previous or next interval during a workout.
+- [x] **RUN-09**: User can reset an in-progress workout after confirmation.
 - [ ] **RUN-10**: User can optionally lock workout controls during playback.
 - [ ] **RUN-11**: User sees a completion screen with timer name, completed duration, a primary path back home, and a secondary `Run again` action.
 - [ ] **RUN-12**: Run mode is optimized for portrait mobile use and hides nonessential app chrome.
-- [ ] **RUN-13**: Workout session state survives a refresh while the page remains open.
+- [x] **RUN-13**: Workout session state survives a refresh while the page remains open.
 
 ### Alerts & Device Feedback
 
@@ -199,18 +199,18 @@
 | EDIT-11 | Phase 2 | Pending |
 | EDIT-12 | Phase 3 | Pending |
 | RUN-01 | Phase 3 | Pending |
-| RUN-02 | Phase 3 | Pending |
-| RUN-03 | Phase 3 | Pending |
-| RUN-04 | Phase 3 | Pending |
-| RUN-05 | Phase 3 | Pending |
-| RUN-06 | Phase 3 | Pending |
-| RUN-07 | Phase 3 | Pending |
-| RUN-08 | Phase 3 | Pending |
-| RUN-09 | Phase 3 | Pending |
+| RUN-02 | Phase 3 | Complete |
+| RUN-03 | Phase 3 | Complete |
+| RUN-04 | Phase 3 | Complete |
+| RUN-05 | Phase 3 | Complete |
+| RUN-06 | Phase 3 | Complete |
+| RUN-07 | Phase 3 | Complete |
+| RUN-08 | Phase 3 | Complete |
+| RUN-09 | Phase 3 | Complete |
 | RUN-10 | Phase 3 | Pending |
 | RUN-11 | Phase 3 | Pending |
 | RUN-12 | Phase 3 | Pending |
-| RUN-13 | Phase 3 | Pending |
+| RUN-13 | Phase 3 | Complete |
 | ALRT-01 | Phase 3 | Pending |
 | ALRT-02 | Phase 3 | Pending |
 | ALRT-03 | Phase 3 | Pending |
