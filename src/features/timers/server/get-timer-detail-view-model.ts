@@ -52,8 +52,15 @@ export interface TimerDetailViewModel {
   metaItems: string[];
   intervals: TimerDetailIntervalItem[];
   notice: string | null;
+  isEditLocked: boolean;
+  editLockReason: string | null;
   emptyStateTitle: string | null;
   emptyStateDescription: string | null;
+}
+
+export interface ActiveRunMarker {
+  timerId: string | null;
+  malformed: boolean;
 }
 
 export interface PersonalTimerDetailDependencies {
@@ -62,11 +69,13 @@ export interface PersonalTimerDetailDependencies {
     authContext: SignedInAuthContext,
     timerId: string,
   ) => Promise<TimerRecord | null>;
+  readActiveRunMarker: () => Promise<ActiveRunMarker>;
 }
 
 export interface OfficialTemplateDetailDependencies {
   getAuthContext: () => Promise<AuthContext>;
   loadTemplateBySlug: (slug: string) => Promise<OfficialTemplateRecord | null>;
+  readActiveRunMarker: () => Promise<ActiveRunMarker>;
 }
 
 function normalizeNotice(input: string | string[] | undefined): string | null {
@@ -174,6 +183,54 @@ async function defaultLoadTemplateBySlug(
   }
 }
 
+function parseActiveRunMarker(rawValue: string | null | undefined): ActiveRunMarker {
+  if (!rawValue) {
+    return {
+      timerId: null,
+      malformed: false,
+    };
+  }
+
+  try {
+    const decodedValue = decodeURIComponent(rawValue);
+    const parsed = JSON.parse(decodedValue) as {
+      timerId?: unknown;
+    };
+
+    if (typeof parsed.timerId !== "string" || !parsed.timerId.trim()) {
+      return {
+        timerId: null,
+        malformed: true,
+      };
+    }
+
+    return {
+      timerId: parsed.timerId,
+      malformed: false,
+    };
+  } catch {
+    return {
+      timerId: null,
+      malformed: true,
+    };
+  }
+}
+
+async function defaultReadActiveRunMarker(): Promise<ActiveRunMarker> {
+  try {
+    const { cookies } = await import("next/headers");
+    const cookieStore = await cookies();
+    const rawValue = cookieStore.get("ndft-active-run")?.value;
+
+    return parseActiveRunMarker(rawValue);
+  } catch {
+    return {
+      timerId: null,
+      malformed: false,
+    };
+  }
+}
+
 export async function getPersonalTimerDetailViewModel(
   timerId: string,
   noticeInput: string | string[] | undefined,
@@ -182,6 +239,7 @@ export async function getPersonalTimerDetailViewModel(
   const dependencies: PersonalTimerDetailDependencies = {
     getAuthContext,
     loadTimerById: defaultLoadTimerById,
+    readActiveRunMarker: defaultReadActiveRunMarker,
     ...overrides,
   };
 
@@ -203,6 +261,8 @@ export async function getPersonalTimerDetailViewModel(
       metaItems: [],
       intervals: [],
       notice,
+      isEditLocked: false,
+      editLockReason: null,
       emptyStateTitle: "Timer detail is private",
       emptyStateDescription:
         "Use Google sign-in to open, review, and manage your saved timers.",
@@ -226,11 +286,16 @@ export async function getPersonalTimerDetailViewModel(
       metaItems: [],
       intervals: [],
       notice,
+      isEditLocked: false,
+      editLockReason: null,
       emptyStateTitle: "Timer unavailable",
       emptyStateDescription:
         "Return to your library and choose another timer from your private list.",
     };
   }
+
+  const activeRunMarker = await dependencies.readActiveRunMarker();
+  const isEditLocked = activeRunMarker.malformed || activeRunMarker.timerId === timer.id;
 
   return {
     auth,
@@ -251,6 +316,10 @@ export async function getPersonalTimerDetailViewModel(
     ],
     intervals: buildIntervals(timer.intervals),
     notice,
+    isEditLocked,
+    editLockReason: isEditLocked
+      ? "Finish or reset this timer's active run before editing."
+      : null,
     emptyStateTitle: null,
     emptyStateDescription: null,
   };
@@ -264,6 +333,7 @@ export async function getOfficialTemplateDetailViewModel(
   const dependencies: OfficialTemplateDetailDependencies = {
     getAuthContext,
     loadTemplateBySlug: defaultLoadTemplateBySlug,
+    readActiveRunMarker: defaultReadActiveRunMarker,
     ...overrides,
   };
 
@@ -285,6 +355,8 @@ export async function getOfficialTemplateDetailViewModel(
       metaItems: [],
       intervals: [],
       notice,
+      isEditLocked: false,
+      editLockReason: null,
       emptyStateTitle: "Template unavailable",
       emptyStateDescription:
         "Browse the official template library again and choose another starter.",
@@ -311,6 +383,8 @@ export async function getOfficialTemplateDetailViewModel(
     ],
     intervals: buildIntervals(template.intervals),
     notice,
+    isEditLocked: false,
+    editLockReason: null,
     emptyStateTitle: null,
     emptyStateDescription: null,
   };

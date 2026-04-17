@@ -24,7 +24,16 @@ import {
 const personalTimerSelect =
   "id, owner_id, name, description, is_draft, source, source_template_id, definition_version, intervals, total_seconds, created_at, updated_at";
 
-export type EditorViewState = "ready" | "guest-restricted" | "not-found";
+export interface ActiveRunMarker {
+  timerId: string | null;
+  malformed: boolean;
+}
+
+export type EditorViewState =
+  | "ready"
+  | "guest-restricted"
+  | "not-found"
+  | "run-locked";
 
 export interface EditorViewModel {
   auth: AuthContext;
@@ -43,6 +52,7 @@ export interface EditorViewModelDependencies {
     authContext: SignedInAuthContext,
     timerId: string,
   ) => Promise<TimerRecord | null>;
+  readActiveRunMarker: () => Promise<ActiveRunMarker>;
 }
 
 function normalizeNotice(input: string | string[] | undefined) {
@@ -89,6 +99,54 @@ async function defaultLoadTimerById(
   }
 }
 
+function parseActiveRunMarker(rawValue: string | null | undefined): ActiveRunMarker {
+  if (!rawValue) {
+    return {
+      timerId: null,
+      malformed: false,
+    };
+  }
+
+  try {
+    const decodedValue = decodeURIComponent(rawValue);
+    const parsed = JSON.parse(decodedValue) as {
+      timerId?: unknown;
+    };
+
+    if (typeof parsed.timerId !== "string" || !parsed.timerId.trim()) {
+      return {
+        timerId: null,
+        malformed: true,
+      };
+    }
+
+    return {
+      timerId: parsed.timerId,
+      malformed: false,
+    };
+  } catch {
+    return {
+      timerId: null,
+      malformed: true,
+    };
+  }
+}
+
+async function defaultReadActiveRunMarker(): Promise<ActiveRunMarker> {
+  try {
+    const { cookies } = await import("next/headers");
+    const cookieStore = await cookies();
+    const rawValue = cookieStore.get("ndft-active-run")?.value;
+
+    return parseActiveRunMarker(rawValue);
+  } catch {
+    return {
+      timerId: null,
+      malformed: false,
+    };
+  }
+}
+
 export async function getEditorViewModel(
   timerId: string,
   noticeInput: string | string[] | undefined,
@@ -97,6 +155,7 @@ export async function getEditorViewModel(
   const dependencies: EditorViewModelDependencies = {
     getAuthContext,
     loadTimerById: defaultLoadTimerById,
+    readActiveRunMarker: defaultReadActiveRunMarker,
     ...overrides,
   };
   const auth = await dependencies.getAuthContext();
@@ -128,6 +187,22 @@ export async function getEditorViewModel(
       title: "Timer unavailable",
       description:
         "The timer is missing, was deleted, or does not belong to this account.",
+      initialState: null,
+    };
+  }
+
+  const activeRunMarker = await dependencies.readActiveRunMarker();
+
+  if (activeRunMarker.malformed || activeRunMarker.timerId === timer.id) {
+    return {
+      auth,
+      authStatusLabel: "Signed In",
+      profile: auth.profile,
+      state: "run-locked",
+      notice,
+      title: "Finish or reset your active run first",
+      description:
+        "Editing is locked while this timer may be running. Return to run mode to finish or reset, then try editing again.",
       initialState: null,
     };
   }

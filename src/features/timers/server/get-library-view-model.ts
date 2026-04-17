@@ -31,6 +31,7 @@ export interface LibraryTimerCard {
   totalSeconds: number;
   sourceLabel: string;
   updatedAt: string;
+  isEditLocked: boolean;
 }
 
 export interface LibraryViewModel {
@@ -41,6 +42,8 @@ export interface LibraryViewModel {
   description: string;
   searchQuery: string;
   statusSummary: string;
+  activeRunTimerId: string | null;
+  hasUnknownActiveRunLock: boolean;
   items: LibraryTimerCard[];
   emptyStateTitle: string;
   emptyStateDescription: string;
@@ -51,6 +54,10 @@ export interface LibraryViewModelDependencies {
   loadPersonalTimers: (
     authContext: SignedInAuthContext,
   ) => Promise<LibraryTimerCard[]>;
+  readActiveRunMarker: () => Promise<{
+    timerId: string | null;
+    malformed: boolean;
+  }>;
 }
 
 function normalizeSearchQuery(input: string | string[] | undefined): string {
@@ -106,6 +113,7 @@ async function defaultLoadPersonalTimers(
       totalSeconds: timer.totalSeconds,
       sourceLabel: getPersonalTimerSourceLabel(timer),
       updatedAt: timer.updatedAt,
+      isEditLocked: false,
     }));
   }
 
@@ -143,9 +151,61 @@ async function defaultLoadPersonalTimers(
       totalSeconds: timer.totalSeconds,
       sourceLabel: getPersonalTimerSourceLabel(timer),
       updatedAt: timer.updatedAt,
+      isEditLocked: false,
     }));
   } catch {
     return [];
+  }
+}
+
+function parseActiveRunMarker(rawValue: string | null | undefined): {
+  timerId: string | null;
+  malformed: boolean;
+} {
+  if (!rawValue) {
+    return {
+      timerId: null,
+      malformed: false,
+    };
+  }
+
+  try {
+    const decodedValue = decodeURIComponent(rawValue);
+    const parsed = JSON.parse(decodedValue) as {
+      timerId?: unknown;
+    };
+
+    if (typeof parsed.timerId !== "string" || !parsed.timerId.trim()) {
+      return {
+        timerId: null,
+        malformed: true,
+      };
+    }
+
+    return {
+      timerId: parsed.timerId,
+      malformed: false,
+    };
+  } catch {
+    return {
+      timerId: null,
+      malformed: true,
+    };
+  }
+}
+
+async function defaultReadActiveRunMarker() {
+  try {
+    const { cookies } = await import("next/headers");
+    const cookieStore = await cookies();
+    const rawValue = cookieStore.get("ndft-active-run")?.value;
+
+    return parseActiveRunMarker(rawValue);
+  } catch {
+    return {
+      timerId: null,
+      malformed: false,
+    };
   }
 }
 
@@ -164,6 +224,7 @@ export async function getLibraryViewModel(
   const dependencies: LibraryViewModelDependencies = {
     getAuthContext,
     loadPersonalTimers: defaultLoadPersonalTimers,
+    readActiveRunMarker: defaultReadActiveRunMarker,
     ...overrides,
   };
 
@@ -180,6 +241,8 @@ export async function getLibraryViewModel(
         "Your personal timers stay owner-scoped, so the library only opens after authentication.",
       searchQuery,
       statusSummary: "Sign in to browse saved and draft timers.",
+      activeRunTimerId: null,
+      hasUnknownActiveRunLock: false,
       items: [],
       emptyStateTitle: "Library unavailable for guests",
       emptyStateDescription:
@@ -188,7 +251,15 @@ export async function getLibraryViewModel(
   }
 
   const loadedItems = await dependencies.loadPersonalTimers(auth);
-  const filteredItems = searchLibraryTimerCards(loadedItems, searchQuery);
+  const activeRunMarker = await dependencies.readActiveRunMarker();
+  const activeRunTimerId = activeRunMarker.malformed ? null : activeRunMarker.timerId;
+  const enrichedItems = loadedItems.map((item) => ({
+    ...item,
+    isEditLocked:
+      activeRunMarker.malformed ||
+      (!!activeRunTimerId && item.id === activeRunTimerId),
+  }));
+  const filteredItems = searchLibraryTimerCards(enrichedItems, searchQuery);
 
   return {
     auth,
@@ -199,6 +270,8 @@ export async function getLibraryViewModel(
       "Search personal timers, spot drafts immediately, and open any timer into its detail review screen.",
     searchQuery,
     statusSummary: buildStatusSummary(filteredItems.length, searchQuery),
+    activeRunTimerId,
+    hasUnknownActiveRunLock: activeRunMarker.malformed,
     items: filteredItems,
     emptyStateTitle: searchQuery
       ? "No timers matched that search"
