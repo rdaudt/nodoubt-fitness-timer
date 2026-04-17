@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { RunEnginePanel } from "../../src/features/run/client/run-engine-panel";
+import { RunScreen } from "../../components/run/run-screen";
 import { getRunViewModel } from "../../src/features/run/server/get-run-view-model";
 
 export const dynamic = "force-dynamic";
@@ -36,43 +36,41 @@ export default async function RunPage({ searchParams }: RunPageProps) {
       <section
         data-testid="run-screen"
         style={{
-          minHeight: "calc(100vh - 3rem)",
-          borderRadius: "2rem",
-          background:
-            "linear-gradient(160deg, rgba(18, 18, 18, 0.96), rgba(46, 13, 8, 0.88))",
-          color: "#fff7ed",
-          padding: "2rem",
+          minHeight: "100vh",
+          padding: "2rem 1.2rem",
           display: "grid",
           alignContent: "center",
-          gap: "1rem",
+          gap: "0.9rem",
           textAlign: "center",
         }}
       >
         <p
           style={{
             margin: 0,
-            fontSize: "0.78rem",
-            fontWeight: 700,
-            letterSpacing: "0.18em",
+            fontSize: "0.76rem",
+            letterSpacing: "0.16em",
             textTransform: "uppercase",
             color: "#f4b862",
+            fontWeight: 700,
           }}
         >
-          Run Layout
+          Run mode
         </p>
-        <h1 style={{ margin: 0, fontSize: "2rem" }}>{viewModel.title}</h1>
-        <p style={{ margin: 0, color: "rgba(255, 247, 237, 0.78)" }}>
+        <h1 style={{ margin: 0, fontSize: "2rem", lineHeight: 1.05 }}>
+          {viewModel.title}
+        </h1>
+        <p style={{ margin: 0, color: "rgba(255, 247, 237, 0.84)" }}>
           {viewModel.description}
         </p>
         <Link
           href="/library"
           style={{
             justifySelf: "center",
-            borderRadius: "1rem",
+            borderRadius: "999px",
             padding: "0.8rem 1rem",
-            textDecoration: "none",
             backgroundColor: "#f2bb67",
             color: "#1c1814",
+            textDecoration: "none",
             fontWeight: 700,
           }}
         >
@@ -82,5 +80,5 @@ export default async function RunPage({ searchParams }: RunPageProps) {
     );
   }
 
-  return <RunEnginePanel sequence={viewModel.sequence} notice={viewModel.notice} />;
+  return <RunScreen sequence={viewModel.sequence} notice={viewModel.notice} />;
 }

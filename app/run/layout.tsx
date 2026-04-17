@@ -10,8 +10,11 @@ export default function RunLayout({ children }: RunLayoutProps) {
       data-testid="run-layout"
       style={{
         minHeight: "100vh",
-        padding: "1.5rem",
-        boxSizing: "border-box",
+        background:
+          "radial-gradient(circle at top, rgba(52, 21, 9, 0.88), rgba(8, 8, 8, 0.98))",
+        color: "#fff7ed",
+        display: "grid",
+        alignItems: "stretch",
       }}
     >
       {children}
