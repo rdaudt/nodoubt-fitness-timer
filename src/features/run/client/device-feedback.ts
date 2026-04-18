@@ -17,23 +17,11 @@ export interface DeviceFeedbackCapabilities {
 interface AudioContextLike {
   state?: string;
   currentTime?: number;
-  destination?: unknown;
+  destination?: AudioNode;
   resume?: () => Promise<void>;
   close?: () => Promise<void>;
-  createOscillator?: () => {
-    type: string;
-    frequency: { value: number };
-    connect: (value: unknown) => void;
-    start: (time?: number) => void;
-    stop: (time?: number) => void;
-  };
-  createGain?: () => {
-    gain: {
-      setValueAtTime: (value: number, time: number) => void;
-      linearRampToValueAtTime: (value: number, time: number) => void;
-    };
-    connect: (value: unknown) => void;
-  };
+  createOscillator?: () => OscillatorNode;
+  createGain?: () => GainNode;
 }
 
 interface WakeLockSentinelLike {
@@ -46,10 +34,9 @@ interface WakeLockLike {
 }
 
 interface DeviceFeedbackEnvironment {
-  AudioContext?: new () => AudioContextLike;
-  webkitAudioContext?: new () => AudioContextLike;
-  navigator?: {
-    vibrate?: (pattern: number | number[]) => boolean;
+  AudioContext?: new (...args: any[]) => AudioContextLike;
+  webkitAudioContext?: new (...args: any[]) => AudioContextLike;
+  navigator?: Navigator & {
     wakeLock?: WakeLockLike;
   };
 }
@@ -61,7 +48,11 @@ function defaultEnvironment(): DeviceFeedbackEnvironment {
 
   return {
     AudioContext: window.AudioContext,
-    webkitAudioContext: (window as Window & { webkitAudioContext?: new () => AudioContextLike })
+    webkitAudioContext: (
+      window as Window & {
+        webkitAudioContext?: new (...args: any[]) => AudioContextLike;
+      }
+    )
       .webkitAudioContext,
     navigator,
   };
@@ -157,7 +148,9 @@ export function createDeviceFeedbackController(
     }
   };
 
-  const vibrate = (pattern: number | number[]) => {
+  const vibrate = (
+    pattern: Parameters<NonNullable<Navigator["vibrate"]>>[0],
+  ) => {
     if (capabilities.haptics.state !== "ready") {
       return;
     }
@@ -233,7 +226,11 @@ export function createDeviceFeedbackController(
       vibrate(PLAYBACK_DEFAULTS.haptics.transitionPattern);
     },
     emitFinalCountdownCue: (secondsRemaining: number) => {
-      if (!PLAYBACK_DEFAULTS.finalCountdownSeconds.includes(secondsRemaining)) {
+      if (
+        !PLAYBACK_DEFAULTS.finalCountdownSeconds.some(
+          (value) => value === secondsRemaining,
+        )
+      ) {
         return;
       }
 

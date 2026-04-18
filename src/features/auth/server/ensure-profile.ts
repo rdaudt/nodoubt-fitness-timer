@@ -18,19 +18,8 @@ interface ProfileCapableUser {
   user_metadata?: Record<string, unknown> | null;
 }
 
-interface QueryBuilderLike {
-  select: (columns: string) => QueryBuilderLike;
-  eq: (column: string, value: string) => QueryBuilderLike;
-  maybeSingle: <T>() => Promise<{ data: T | null; error: unknown }>;
-  upsert: (
-    values: Record<string, unknown>,
-    options: { onConflict: string },
-  ) => QueryBuilderLike;
-  single: <T>() => Promise<{ data: T | null; error: unknown }>;
-}
-
 interface NeonDatabaseClient {
-  from: (table: string) => QueryBuilderLike;
+  from: (table: string) => any;
 }
 
 function normalizeOptionalString(value: unknown) {
@@ -123,14 +112,16 @@ export async function ensureProfile(
     .from("profiles")
     .select("id, first_name, avatar_url, created_at, updated_at")
     .eq("id", user.id)
-    .maybeSingle<ProfileRow>();
+    .maybeSingle();
 
   if (existingProfileError) {
     return fallbackProfile;
   }
 
-  if (existingProfile?.first_name?.trim()) {
-    return toProfileDisplayRecord(mapProfileRow(existingProfile));
+  const existing = existingProfile as ProfileRow | null;
+
+  if (existing?.first_name?.trim()) {
+    return toProfileDisplayRecord(mapProfileRow(existing));
   }
 
   const { data: savedProfile, error: saveError } = await database
@@ -138,19 +129,21 @@ export async function ensureProfile(
     .upsert(
       {
         id: user.id,
-        first_name: existingProfile?.first_name?.trim() || profileSeed.firstName,
-        avatar_url: existingProfile?.avatar_url ?? profileSeed.avatarUrl,
+        first_name: existing?.first_name?.trim() || profileSeed.firstName,
+        avatar_url: existing?.avatar_url ?? profileSeed.avatarUrl,
       },
       {
         onConflict: "id",
       },
     )
     .select("id, first_name, avatar_url, created_at, updated_at")
-    .single<ProfileRow>();
+    .single();
 
-  if (saveError || !savedProfile) {
+  const saved = savedProfile as ProfileRow | null;
+
+  if (saveError || !saved) {
     return fallbackProfile;
   }
 
-  return toProfileDisplayRecord(mapProfileRow(savedProfile));
+  return toProfileDisplayRecord(mapProfileRow(saved));
 }

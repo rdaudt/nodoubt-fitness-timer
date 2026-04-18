@@ -71,7 +71,7 @@ export async function getNeonAuthServer() {
         },
       });
 
-      authSingleton = auth as NeonAuthServer;
+      authSingleton = auth as unknown as NeonAuthServer;
       return authSingleton;
     })
     .finally(() => {

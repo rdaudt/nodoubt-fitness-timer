@@ -301,7 +301,11 @@ export function useRunEngine(sequence: RunSequence, options: RunEngineOptions = 
       Math.max(0, frame.progress.intervalRemainingMs) / 1_000,
     );
 
-    if (!PLAYBACK_DEFAULTS.finalCountdownSeconds.includes(secondsRemaining)) {
+    if (
+      !PLAYBACK_DEFAULTS.finalCountdownSeconds.some(
+        (value) => value === secondsRemaining,
+      )
+    ) {
       return;
     }
 

@@ -31,7 +31,12 @@ const navItems = [
     label: "Templates",
     testId: "nav-templates",
   },
-] as const;
+] satisfies ReadonlyArray<{
+  href: string;
+  label: string;
+  testId: string;
+  isPrimary?: boolean;
+}>;
 
 function isCurrentPath(pathname: string, href: string) {
   if (href === "/") {
