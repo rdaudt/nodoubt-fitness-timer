@@ -1,10 +1,11 @@
 import { redirect } from "next/navigation";
+import type { ReactElement } from "react";
 
 import {
   createServer,
-  getSupabaseEnv,
+  getNeonEnv,
   isAuthTestMode,
-} from "../../../lib/supabase/server";
+} from "../../../lib/neon/server";
 import { LibraryScreen } from "../../../components/library/library-screen";
 import { getAuthContext } from "../../../src/features/auth/server/get-auth-context";
 import { getLibraryViewModel } from "../../../src/features/timers/server/get-library-view-model";
@@ -46,11 +47,11 @@ async function duplicateTimerFromLibraryAction(formData: FormData) {
   if (isAuthTestMode()) {
     const row = getMockPersonalTimerRowById({ userId: auth.userId }, timerId);
     sourceTimer = row ? mapPersonalTimerRow(row) : null;
-  } else if (getSupabaseEnv()) {
-    const supabase = await createServer();
+  } else if (getNeonEnv()) {
+    const database = await createServer();
     const spec = listPersonalTimersSpec({ userId: auth.userId });
 
-    let query = supabase.from(spec.table).select(personalTimerSelect);
+    let query = database.from(spec.table).select(personalTimerSelect);
 
     for (const filter of spec.filters) {
       query = query.eq(filter.column, filter.value);
@@ -78,15 +79,15 @@ async function duplicateTimerFromLibraryAction(formData: FormData) {
     );
   }
 
-  if (!getSupabaseEnv()) {
+  if (!getNeonEnv()) {
     redirect(
-      `/library?notice=${encodeURIComponent("Supabase is not configured, so duplication is only available in auth test mode right now.")}`,
+      `/library?notice=${encodeURIComponent("database is not configured, so duplication is only available in auth test mode right now.")}`,
     );
   }
 
-  const supabase = await createServer();
+  const database = await createServer();
   const insert = buildPersonalTimerInsert({ userId: auth.userId }, duplicateInput);
-  const { error } = await supabase.from("personal_timers").insert(insert);
+  const { error } = await database.from("personal_timers").insert(insert);
 
   if (error) {
     redirect(
@@ -126,14 +127,14 @@ async function deleteTimerFromLibraryAction(formData: FormData) {
     );
   }
 
-  if (!getSupabaseEnv()) {
+  if (!getNeonEnv()) {
     redirect(
-      `/library?notice=${encodeURIComponent("Supabase is not configured, so deletion is only available in auth test mode right now.")}`,
+      `/library?notice=${encodeURIComponent("database is not configured, so deletion is only available in auth test mode right now.")}`,
     );
   }
 
-  const supabase = await createServer();
-  const { error } = await supabase
+  const database = await createServer();
+  const { error } = await database
     .from("personal_timers")
     .delete()
     .eq("id", timerId)
@@ -212,7 +213,8 @@ export default async function LibraryPage({
         </form>
       </div>,
     ]),
-  ) as Record<string, JSX.Element>;
+  ) as Record<string, ReactElement>;
 
   return <LibraryScreen viewModel={viewModel} notice={notice} actions={actions} />;
 }
+

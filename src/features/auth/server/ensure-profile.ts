@@ -1,5 +1,3 @@
-import type { SupabaseClient, User } from "@supabase/supabase-js";
-
 import {
   toProfileDisplayRecord,
   type ProfileDisplayRecord,
@@ -14,7 +12,26 @@ interface ProfileRow {
   updated_at: string;
 }
 
-type ProfileCapableUser = Pick<User, "id" | "email" | "user_metadata">;
+interface ProfileCapableUser {
+  id: string;
+  email?: string | null;
+  user_metadata?: Record<string, unknown> | null;
+}
+
+interface QueryBuilderLike {
+  select: (columns: string) => QueryBuilderLike;
+  eq: (column: string, value: string) => QueryBuilderLike;
+  maybeSingle: <T>() => Promise<{ data: T | null; error: unknown }>;
+  upsert: (
+    values: Record<string, unknown>,
+    options: { onConflict: string },
+  ) => QueryBuilderLike;
+  single: <T>() => Promise<{ data: T | null; error: unknown }>;
+}
+
+interface NeonDatabaseClient {
+  from: (table: string) => QueryBuilderLike;
+}
 
 function normalizeOptionalString(value: unknown) {
   return typeof value === "string" && value.trim() ? value.trim() : null;
@@ -92,7 +109,7 @@ export function deriveProfileSeed(user: ProfileCapableUser) {
 }
 
 export async function ensureProfile(
-  supabase: SupabaseClient,
+  database: NeonDatabaseClient,
   user: ProfileCapableUser,
 ) {
   const profileSeed = deriveProfileSeed(user);
@@ -102,7 +119,7 @@ export async function ensureProfile(
     profileSeed.avatarUrl,
   );
 
-  const { data: existingProfile, error: existingProfileError } = await supabase
+  const { data: existingProfile, error: existingProfileError } = await database
     .from("profiles")
     .select("id, first_name, avatar_url, created_at, updated_at")
     .eq("id", user.id)
@@ -116,7 +133,7 @@ export async function ensureProfile(
     return toProfileDisplayRecord(mapProfileRow(existingProfile));
   }
 
-  const { data: savedProfile, error: saveError } = await supabase
+  const { data: savedProfile, error: saveError } = await database
     .from("profiles")
     .upsert(
       {

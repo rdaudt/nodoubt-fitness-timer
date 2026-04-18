@@ -3,9 +3,9 @@ import { redirect } from "next/navigation";
 
 import {
   createServer,
-  getSupabaseEnv,
+  getNeonEnv,
   isAuthTestMode,
-} from "../../../../lib/supabase/server";
+} from "../../../../lib/neon/server";
 import { TimerDetailScreen } from "../../../../components/detail/timer-detail-screen";
 import { getAuthContext } from "../../../../src/features/auth/server/get-auth-context";
 import {
@@ -50,11 +50,11 @@ async function duplicateTimerAction(formData: FormData) {
   if (isAuthTestMode()) {
     const row = getMockPersonalTimerRowById({ userId: auth.userId }, timerId);
     sourceTimer = row ? mapPersonalTimerRow(row) : null;
-  } else if (getSupabaseEnv()) {
-    const supabase = await createServer();
+  } else if (getNeonEnv()) {
+    const database = await createServer();
     const spec = listPersonalTimersSpec({ userId: auth.userId });
 
-    let query = supabase.from(spec.table).select(personalTimerSelect);
+    let query = database.from(spec.table).select(personalTimerSelect);
 
     for (const filter of spec.filters) {
       query = query.eq(filter.column, filter.value);
@@ -83,15 +83,15 @@ async function duplicateTimerAction(formData: FormData) {
     );
   }
 
-  if (!getSupabaseEnv()) {
+  if (!getNeonEnv()) {
     redirect(
-      `/timers/${timerId}?notice=${encodeURIComponent("Supabase is not configured, so duplication is only available in auth test mode right now.")}`,
+      `/timers/${timerId}?notice=${encodeURIComponent("database is not configured, so duplication is only available in auth test mode right now.")}`,
     );
   }
 
-  const supabase = await createServer();
+  const database = await createServer();
   const insert = buildPersonalTimerInsert({ userId: auth.userId }, duplicateInput);
-  const { data, error } = await supabase
+  const { data, error } = await database
     .from("personal_timers")
     .insert(insert)
     .select("id")
@@ -148,14 +148,14 @@ async function renameTimerAction(formData: FormData) {
     );
   }
 
-  if (!getSupabaseEnv()) {
+  if (!getNeonEnv()) {
     redirect(
-      `/timers/${timerId}?notice=${encodeURIComponent("Supabase is not configured, so renaming is only available in auth test mode right now.")}`,
+      `/timers/${timerId}?notice=${encodeURIComponent("database is not configured, so renaming is only available in auth test mode right now.")}`,
     );
   }
 
-  const supabase = await createServer();
-  const { error } = await supabase
+  const database = await createServer();
+  const { error } = await database
     .from("personal_timers")
     .update({ name: nextName })
     .eq("id", timerId)
@@ -199,14 +199,14 @@ async function deleteTimerAction(formData: FormData) {
     );
   }
 
-  if (!getSupabaseEnv()) {
+  if (!getNeonEnv()) {
     redirect(
-      `/timers/${timerId}?notice=${encodeURIComponent("Supabase is not configured, so deletion is only available in auth test mode right now.")}`,
+      `/timers/${timerId}?notice=${encodeURIComponent("database is not configured, so deletion is only available in auth test mode right now.")}`,
     );
   }
 
-  const supabase = await createServer();
-  const { error } = await supabase
+  const database = await createServer();
+  const { error } = await database
     .from("personal_timers")
     .delete()
     .eq("id", timerId)
@@ -391,4 +391,5 @@ export default async function TimerDetailPage({
 
   return <TimerDetailScreen viewModel={viewModel} actions={actions} />;
 }
+
 

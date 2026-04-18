@@ -1,9 +1,13 @@
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
-vi.mock("../../lib/supabase/server", () => ({
+vi.mock("../../lib/neon/server", () => ({
   createServer: vi.fn(),
   getMockAuthSession: vi.fn(),
-  getSupabaseEnv: vi.fn(),
+}));
+
+vi.mock("../../lib/neon/auth-server", () => ({
+  getNeonAuthServer: vi.fn(),
+  hasNeonAuthServerEnv: vi.fn(),
 }));
 
 vi.mock(
@@ -22,8 +26,11 @@ vi.mock(
 import {
   createServer,
   getMockAuthSession,
-  getSupabaseEnv,
-} from "../../lib/supabase/server";
+} from "../../lib/neon/server";
+import {
+  getNeonAuthServer,
+  hasNeonAuthServerEnv,
+} from "../../lib/neon/auth-server";
 import { getAuthContext } from "../../src/features/auth/server/get-auth-context";
 import {
   deriveFirstNameCandidate,
@@ -31,6 +38,12 @@ import {
 } from "../../src/features/auth/server/ensure-profile";
 
 describe("auth-bootstrap", () => {
+  beforeEach(() => {
+    vi.resetAllMocks();
+    vi.mocked(hasNeonAuthServerEnv).mockReturnValue(false);
+    vi.mocked(getMockAuthSession).mockResolvedValue(null);
+  });
+
   it("derives a first name from provider metadata before falling back", () => {
     expect(
       deriveFirstNameCandidate(
@@ -49,9 +62,9 @@ describe("auth-bootstrap", () => {
     );
   });
 
-  it("returns guest state when Supabase env is not configured", async () => {
+  it("returns guest state when Neon auth env is not configured", async () => {
     vi.mocked(getMockAuthSession).mockResolvedValue(null);
-    vi.mocked(getSupabaseEnv).mockReturnValue(null);
+    vi.mocked(hasNeonAuthServerEnv).mockReturnValue(false);
 
     await expect(getAuthContext()).resolves.toEqual({
       kind: "guest",
@@ -62,7 +75,7 @@ describe("auth-bootstrap", () => {
     });
   });
 
-  it("prefers the test cookie session over the live Supabase client", async () => {
+  it("prefers the test cookie session over the live Neon auth session", async () => {
     vi.mocked(getMockAuthSession).mockResolvedValue({
       userId: "mock-user",
       email: "mock@example.com",
@@ -87,28 +100,26 @@ describe("auth-bootstrap", () => {
 
   it("builds signed-in state from the trusted user id and ensured profile", async () => {
     vi.mocked(getMockAuthSession).mockResolvedValue(null);
-    vi.mocked(getSupabaseEnv).mockReturnValue({
-      url: "https://example.supabase.co",
-      anonKey: "anon-key",
-    });
+    vi.mocked(hasNeonAuthServerEnv).mockReturnValue(true);
 
-    const getUser = vi.fn().mockResolvedValue({
+    const getSession = vi.fn().mockResolvedValue({
       data: {
         user: {
           id: "user-42",
           email: "athlete@example.com",
-          user_metadata: {
-            given_name: "Athlete",
-          },
+          name: "Athlete Prime",
+          image: null,
         },
       },
       error: null,
     });
 
+    vi.mocked(getNeonAuthServer).mockResolvedValue({
+      getSession,
+    } as never);
+
     vi.mocked(createServer).mockResolvedValue({
-      auth: {
-        getUser,
-      },
+      from: vi.fn(),
     } as never);
 
     vi.mocked(ensureProfile).mockResolvedValue({

@@ -3,11 +3,11 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 03-03-PLAN.md
-last_updated: "2026-04-17T06:51:07.945Z"
-last_activity: 2026-04-16 - Completed 03-03 device feedback orchestration, capability fallbacks, and phase3 verification runner updates.
+stopped_at: Session resumed, pending Phase 3 human sign-off decision
+last_updated: "2026-04-17T14:45:04.364Z"
+last_activity: 2026-04-17 - Session resumed at Phase 3 verification handoff (.continue-here checkpoint).
 progress:
-  total_phases: 5
+  total_phases: 6
   completed_phases: 3
   total_plans: 9
   completed_plans: 9
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-15)
 
 **Core value:** Users can quickly create or open a structured workout timer and run it reliably from across the room with clear visual, audio, and haptic transitions.
-**Current focus:** Phase transition prep after completing deterministic run engine and playback.
+**Current focus:** Phase 3.1 platform pivot from Supabase to Neon + Neon Auth.
 
 ## Current Position
 
-Phase: 3 of 5 (Deterministic Run Engine and Playback)
-Plan: 3 of 3 in current phase
-Status: Complete
-Last activity: 2026-04-16 - Completed 03-03 device feedback orchestration, capability fallbacks, and phase3 verification runner updates.
+Phase: 3.1 of 6 (Platform Pivot to Neon + Neon Auth)
+Plan: 1 of 1 in current phase
+Status: Executing
+Last activity: 2026-04-17 - Began big-bang auth/data platform replacement from Supabase to Neon.
 
 Progress: [##########] 100%
 
@@ -67,7 +67,7 @@ Recent decisions affecting current work:
 - [Phase 01]: Treat missing owner context as a hard failure in repository scaffolding instead of falling back to broad reads. Fail-closed repository helpers reinforce the RLS contract and stop unauthenticated or cross-user leakage in later plans.
 - [Phase 01]: Seed only public official templates so Phase 1 guest data never pollutes private ownership paths. The shared seed path should support guest browsing without implying any sample personal timer data exists in private tables.
 - [Phase 01]: Resolve guest versus signed-in shell state on the server first so refreshes restore identity context without depending on client-only session memory.
-- [Phase 01]: Bootstrap a minimal profile row for first-name display while keeping authorization anchored to Supabase identity and RLS contracts.
+- [Phase 01]: Bootstrap a minimal profile row for first-name display while keeping authorization anchored to identity-backed RLS contracts.
 - [Phase 01]: Keep auth smoke tests runnable in automation through a guarded mock callback/session path before the full shell experience is built.
 - [Phase 01]: Use a dedicated (shell) route group so home and templates keep shared chrome while /run stays isolated for future playback.
 - [Phase 01]: Resolve guest versus signed-in home differences through one server-rendered view-model instead of separate page trees.
@@ -97,8 +97,8 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-17T06:50:43.736Z
-Stopped at: Completed 03-03-PLAN.md
-Resume file: None
+Last session: 2026-04-17T14:45:04.364Z
+Stopped at: Session resumed, awaiting Phase 3 sign-off choice
+Resume file: .planning/phases/03-deterministic-run-engine-and-playback/.continue-here.md
 
 

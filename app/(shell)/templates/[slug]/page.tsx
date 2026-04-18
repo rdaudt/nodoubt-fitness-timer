@@ -3,9 +3,9 @@ import { redirect } from "next/navigation";
 
 import {
   createServer,
-  getSupabaseEnv,
+  getNeonEnv,
   isAuthTestMode,
-} from "../../../../lib/supabase/server";
+} from "../../../../lib/neon/server";
 import { TimerDetailScreen } from "../../../../components/detail/timer-detail-screen";
 import { getAuthContext } from "../../../../src/features/auth/server/get-auth-context";
 import {
@@ -48,14 +48,14 @@ async function duplicateTemplateAction(formData: FormData) {
 
   let template = null;
 
-  if (isAuthTestMode() || !getSupabaseEnv()) {
+  if (isAuthTestMode() || !getNeonEnv()) {
     const row = getMockOfficialTemplateRowBySlug(slug);
     template = row ? mapOfficialTemplateRow(row) : null;
   } else {
-    const supabase = await createServer();
+    const database = await createServer();
     const spec = getOfficialTemplateBySlugSpec(slug);
 
-    let query = supabase.from(spec.table).select(officialTemplateSelect);
+    let query = database.from(spec.table).select(officialTemplateSelect);
 
     for (const filter of spec.filters) {
       query = query.eq(filter.column, filter.value);
@@ -86,15 +86,15 @@ async function duplicateTemplateAction(formData: FormData) {
     redirect(`/timers/${row.id}?notice=${encodeURIComponent(editNotice)}`);
   }
 
-  if (!getSupabaseEnv()) {
+  if (!getNeonEnv()) {
     redirect(
-      `/templates/${slug}?notice=${encodeURIComponent("Supabase is not configured, so template duplication is only available in auth test mode right now.")}`,
+      `/templates/${slug}?notice=${encodeURIComponent("database is not configured, so template duplication is only available in auth test mode right now.")}`,
     );
   }
 
-  const supabase = await createServer();
+  const database = await createServer();
   const insert = buildPersonalTimerInsert({ userId: auth.userId }, duplicateInput);
-  const { data, error } = await supabase
+  const { data, error } = await database
     .from("personal_timers")
     .insert(insert)
     .select("id")
@@ -216,4 +216,5 @@ export default async function TemplateDetailPage({
 
   return <TimerDetailScreen viewModel={viewModel} actions={actions} />;
 }
+
 

@@ -2,10 +2,9 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import {
   AUTH_TEST_COOKIE_NAME,
-  createServer,
   encodeMockAuthSession,
   isAuthTestMode,
-} from "../../../lib/supabase/server";
+} from "../../../lib/neon/server";
 
 function normalizeNextPath(rawNextPath: string | null) {
   if (!rawNextPath) {
@@ -64,43 +63,14 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  const code = requestUrl.searchParams.get("code");
-
-  if (!code) {
-    const response = NextResponse.redirect(redirectUrl);
-    response.cookies.set("ndft-auth-error", "missing-code", {
-      sameSite: "lax",
-      secure: false,
-      path: "/",
-      maxAge: 60,
-    });
-    return response;
-  }
-
-  try {
-    const supabase = await createServer();
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
-
-    if (error) {
-      const response = NextResponse.redirect(redirectUrl);
-      response.cookies.set("ndft-auth-error", "exchange-error", {
-        sameSite: "lax",
-        secure: false,
-        path: "/",
-        maxAge: 60,
-      });
-      return response;
-    }
-
-    return NextResponse.redirect(redirectUrl);
-  } catch {
-    const response = NextResponse.redirect(redirectUrl);
-    response.cookies.set("ndft-auth-error", "configuration-error", {
-      sameSite: "lax",
-      secure: false,
-      path: "/",
-      maxAge: 60,
-    });
-    return response;
-  }
+  // Production auth callbacks are handled by Neon Auth route handlers under
+  // /api/auth/[...path]. This endpoint remains for AUTH_TEST_MODE mocking.
+  const response = NextResponse.redirect(redirectUrl);
+  response.cookies.set("ndft-auth-error", "deprecated-callback", {
+    sameSite: "lax",
+    secure: false,
+    path: "/",
+    maxAge: 60,
+  });
+  return response;
 }

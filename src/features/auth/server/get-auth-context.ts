@@ -1,10 +1,11 @@
-import type { User } from "@supabase/supabase-js";
-
 import {
   createServer,
   getMockAuthSession,
-  getSupabaseEnv,
-} from "../../../../lib/supabase/server";
+} from "../../../../lib/neon/server";
+import {
+  getNeonAuthServer,
+  hasNeonAuthServerEnv,
+} from "../../../../lib/neon/auth-server";
 import type { ProfileDisplayRecord } from "../../profiles/contracts/profile";
 import { ensureProfile } from "./ensure-profile";
 
@@ -26,7 +27,11 @@ export interface SignedInAuthContext {
 
 export type AuthContext = GuestAuthContext | SignedInAuthContext;
 
-type AuthenticatedUser = Pick<User, "id" | "email" | "user_metadata">;
+interface AuthenticatedUser {
+  id: string;
+  email: string | null | undefined;
+  user_metadata?: Record<string, unknown> | null;
+}
 
 function guestAuthContext(): GuestAuthContext {
   return {
@@ -68,21 +73,33 @@ export async function getAuthContext(): Promise<AuthContext> {
     );
   }
 
-  if (!getSupabaseEnv()) {
+  if (!hasNeonAuthServerEnv()) {
     return guestAuthContext();
   }
 
-  const supabase = await createServer();
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
+  const auth = await getNeonAuthServer();
+  const { data, error } = await auth.getSession();
+  const user = data?.user;
 
-  if (error || !user) {
+  if (error || !user?.id) {
     return guestAuthContext();
   }
 
-  const profile = await ensureProfile(supabase, user);
+  const database = await createServer();
+  const profile = await ensureProfile(database, {
+    id: user.id,
+    email: user.email,
+    user_metadata: {
+      full_name: user.name ?? null,
+      picture: user.image ?? null,
+    },
+  });
 
-  return signedInAuthContext(user, profile);
+  return signedInAuthContext(
+    {
+      id: user.id,
+      email: user.email ?? null,
+    },
+    profile,
+  );
 }

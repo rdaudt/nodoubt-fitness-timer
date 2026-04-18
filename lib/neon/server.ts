@@ -1,5 +1,7 @@
-import { createServerClient } from "@supabase/ssr";
+import { NeonPostgrestClient, fetchWithToken } from "@neondatabase/postgrest-js";
 import { cookies } from "next/headers";
+
+import { getNeonAuthServer, hasNeonAuthServerEnv } from "./auth-server";
 
 export const AUTH_TEST_COOKIE_NAME = "ndft-auth-test-session";
 
@@ -10,19 +12,24 @@ export interface MockAuthSession {
   avatarUrl: string | null;
 }
 
+export interface NeonDataEnv {
+  dataApiUrl: string;
+  authUrl: string;
+}
+
 function normalizeOptionalString(value: unknown) {
   return typeof value === "string" && value.trim() ? value.trim() : null;
 }
 
-export function getSupabaseEnv() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim();
+export function getNeonEnv(): NeonDataEnv | null {
+  const dataApiUrl = process.env.NEXT_PUBLIC_NEON_DATA_API_URL?.trim();
+  const authUrl = process.env.NEXT_PUBLIC_NEON_AUTH_URL?.trim();
 
-  if (!url || !anonKey) {
+  if (!dataApiUrl || !authUrl) {
     return null;
   }
 
-  return { url, anonKey };
+  return { dataApiUrl, authUrl };
 }
 
 export function isAuthTestMode() {
@@ -67,31 +74,45 @@ export async function getMockAuthSession() {
   }
 }
 
+async function resolveAuthToken() {
+  if (!hasNeonAuthServerEnv()) {
+    return null;
+  }
+
+  const auth = await getNeonAuthServer();
+
+  try {
+    const accessResult = await auth.getAccessToken();
+    const accessToken =
+      (accessResult as { data?: { token?: string | null } }).data?.token ??
+      null;
+
+    if (accessToken) {
+      return accessToken;
+    }
+  } catch {
+    // Fall through to anonymous-token attempt.
+  }
+
+  const anonymousResult = await auth.getAnonymousToken?.();
+
+  return anonymousResult?.data?.token ?? null;
+}
+
 export async function createServer() {
-  const env = getSupabaseEnv();
+  const env = getNeonEnv();
 
   if (!env) {
     throw new Error(
-      "Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY.",
+      "Missing NEXT_PUBLIC_NEON_DATA_API_URL or NEXT_PUBLIC_NEON_AUTH_URL.",
     );
   }
 
-  const cookieStore = await cookies();
-
-  return createServerClient(env.url, env.anonKey, {
-    cookies: {
-      getAll() {
-        return cookieStore.getAll();
-      },
-      setAll(cookiesToSet) {
-        try {
-          for (const { name, value, options } of cookiesToSet) {
-            cookieStore.set(name, value, options);
-          }
-        } catch {
-          // Server Components can read cookies but may not be allowed to write
-          // them. Middleware handles refresh writes before rendering.
-        }
+  return new NeonPostgrestClient({
+    dataApiUrl: env.dataApiUrl,
+    options: {
+      global: {
+        fetch: fetchWithToken(resolveAuthToken),
       },
     },
   });

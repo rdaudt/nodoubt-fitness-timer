@@ -13,6 +13,7 @@ This roadmap moves No Doubt Fitness Timer from a documentation-first repo to a b
 - [x] **Phase 1: Foundation, Access, and Data Boundaries** - Establish the mobile shell, guest/signed-in entry states, Google auth, and private timer ownership rules.
 - [x] **Phase 2: Authoring, Library CRUD, and Drafts** - Deliver timer creation, editing, duplication, detail review, and reusable personal-library workflows.
 - [x] **Phase 3: Deterministic Run Engine and Playback** - Make timers trustworthy to run from across the room with deterministic timing and device feedback.
+- [ ] **Phase 3.1 (INSERTED): Platform Pivot to Neon + Neon Auth** - Replace Supabase auth/data integration with Neon Auth + Neon Data API while preserving RLS ownership boundaries and existing UX behavior.
 - [ ] **Phase 4: Offline Resilience and PWA Delivery** - Add installability and constrained offline playback for previously loaded timers.
 - [ ] **Phase 5: Settings, Account Lifecycle, and Launch Surfaces** - Finish defaults, account management, analytics, and branded supporting surfaces for launch readiness.
 
@@ -30,7 +31,7 @@ This roadmap moves No Doubt Fitness Timer from a documentation-first repo to a b
 
 Plans:
 - [x] 01-01: Build the mobile app shell, route structure, and guest/signed-in home split.
-- [x] 01-02: Implement Supabase Google auth bootstrap, session persistence, and signed-in identity context.
+- [x] 01-02: Implement Google auth bootstrap, session persistence, and signed-in identity context.
 - [x] 01-03: Freeze the initial timer/template data model and private ownership boundary with RLS-aware persistence scaffolding.
 
 ### Phase 2: Authoring, Library CRUD, and Drafts
@@ -67,6 +68,20 @@ Plans:
 - [x] 03-02: Build the full-screen run UI, controls, entry points, and completion flow.
 - [x] 03-03: Integrate audio, haptics, wake-lock, and session recovery behavior with browser capability fallbacks.
 
+### Phase 3.1 (INSERTED): Platform Pivot to Neon + Neon Auth
+**Goal**: Re-platform auth and persistence from Supabase to Neon Auth + Neon Data API with no product-level behavior changes.
+**Depends on**: Phase 3
+**Requirements**: AUTH-01, AUTH-02, AUTH-03, PRIV-01, LIBR-08
+**Success Criteria** (what must be TRUE):
+  1. Runtime codepaths contain no Supabase SDK imports or required Supabase env vars.
+  2. Neon Auth route/middleware/session flow supports existing guest and signed-in behaviors, including auth test mode.
+  3. Database migrations and policies enforce owner isolation through Neon-compatible RLS (`auth.user_id()`).
+  4. Existing phase test suites remain green under Neon env/test-mode configuration.
+**Plans**: 1 plan
+
+Plans:
+- [ ] 03-04: Execute the big-bang Supabase -> Neon + Neon Auth replacement across runtime, SQL, tests, and env contracts.
+
 ### Phase 4: Offline Resilience and PWA Delivery
 **Goal**: Users can install the app and rely on previously loaded timers continuing to work offline on the same device within clearly bounded browser constraints.
 **Depends on**: Phase 3
@@ -99,12 +114,13 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
+Phases execute in numeric order: 1 -> 2 -> 3 -> 3.1 -> 4 -> 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation, Access, and Data Boundaries | 3/3 | Complete    | 2026-04-16 |
 | 2. Authoring, Library CRUD, and Drafts | 3/3 | Complete    | 2026-04-16 |
 | 3. Deterministic Run Engine and Playback | 3/3 | Complete | 2026-04-17 |
+| 3.1 Platform Pivot to Neon + Neon Auth | 0/1 | Not started | - |
 | 4. Offline Resilience and PWA Delivery | 0/2 | Not started | - |
 | 5. Settings, Account Lifecycle, and Launch Surfaces | 0/2 | Not started | - |

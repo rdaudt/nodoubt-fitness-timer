@@ -2,21 +2,20 @@
 
 import { useState } from "react";
 
-import { createBrowser, hasSupabaseBrowserEnv } from "../../../../lib/supabase/browser";
+import { createBrowser, hasNeonBrowserEnv } from "../../../../lib/neon/browser";
 
 export function GoogleSignInButton() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const isConfigured = hasSupabaseBrowserEnv();
+  const isConfigured = hasNeonBrowserEnv();
 
   async function handleSignIn() {
     setErrorMessage(null);
 
     try {
-      const supabase = createBrowser();
-      const redirectTo = new URL("/auth/callback", window.location.origin);
-      redirectTo.searchParams.set("next", "/");
+      const neonAuth = createBrowser();
+      const redirectTo = new URL("/", window.location.origin);
 
-      const { error } = await supabase.auth.signInWithOAuth({
+      const { error } = await neonAuth.signInWithOAuth({
         provider: "google",
         options: {
           redirectTo: redirectTo.toString(),
@@ -45,7 +44,7 @@ export function GoogleSignInButton() {
       </button>
       {!isConfigured ? (
         <p data-testid="auth-env-hint">
-          Add the public Supabase env vars to enable Google sign-in.
+          Add Neon auth env vars to enable Google sign-in.
         </p>
       ) : null}
       {errorMessage ? <p data-testid="google-sign-in-error">{errorMessage}</p> : null}

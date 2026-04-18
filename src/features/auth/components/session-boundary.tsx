@@ -28,7 +28,7 @@ export function SessionBoundary({ authContext }: SessionBoundaryProps) {
       </header>
       <h1>No Doubt Fitness Timer</h1>
       <p data-testid="signed-in-email">
-        {authContext.email ?? "Signed in with Supabase Auth"}
+        {authContext.email ?? "Signed in with Neon Auth"}
       </p>
       <p>
         Signed-in shell state is server-rendered from auth identity and profile

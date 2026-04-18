@@ -41,8 +41,9 @@
     "vitest": "^4.1.4"
   },
   "dependencies": {
-    "@supabase/ssr": "^0.10.2",
-    "@supabase/supabase-js": "^2.103.3",
+    "@neondatabase/auth": "^0.2.0-beta.1",
+    "@neondatabase/neon-js": "^0.2.0-beta.1",
+    "@neondatabase/postgrest-js": "^0.1.0-alpha.2",
     "next": "^16.2.4",
     "react": "^19.2.5",
     "react-dom": "^19.2.5"

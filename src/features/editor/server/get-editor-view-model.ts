@@ -1,8 +1,8 @@
 import {
   createServer,
-  getSupabaseEnv,
+  getNeonEnv,
   isAuthTestMode,
-} from "../../../../lib/supabase/server";
+} from "../../../../lib/neon/server";
 import type {
   AuthContext,
   SignedInAuthContext,
@@ -73,15 +73,15 @@ async function defaultLoadTimerById(
     return row ? mapPersonalTimerRow(row) : null;
   }
 
-  if (!getSupabaseEnv()) {
+  if (!getNeonEnv()) {
     return null;
   }
 
   try {
-    const supabase = await createServer();
+    const database = await createServer();
     const spec = listPersonalTimersSpec({ userId: authContext.userId });
 
-    let query = supabase.from(spec.table).select(personalTimerSelect);
+    let query = database.from(spec.table).select(personalTimerSelect);
 
     for (const filter of spec.filters) {
       query = query.eq(filter.column, filter.value);
@@ -220,3 +220,4 @@ export async function getEditorViewModel(
     initialState: buildEditorStateFromTimer(timer),
   };
 }
+

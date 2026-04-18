@@ -19,7 +19,7 @@ Users can quickly create or open a structured workout timer and run it reliably 
 - [ ] Build a mobile-first web MVP for structured interval workouts with fast creation, editing, and playback flows.
 - [ ] Deliver a full-screen run experience that is readable at distance and supports current, next, and total remaining timing context.
 - [ ] Support guest use for official templates and temporary timers, with Google sign-in required to save timers permanently.
-- [ ] Persist signed-in timers, drafts, and official templates through Supabase with private per-user access controls.
+- [ ] Persist signed-in timers, drafts, and official templates through Neon with private per-user access controls.
 - [ ] Ship official NoDoubt Fitness starter templates and branded surfaces that feel official without interfering with timer usability.
 - [ ] Launch as an installable PWA with offline support for previously loaded timers and browser-realistic resilience constraints.
 
@@ -37,15 +37,15 @@ The repository is currently documentation-first rather than implementation-first
 
 The product is positioned as a mobile web/PWA timer inspired by Seconds Interval Timer, but adapted for web constraints and a cleaner editing experience. The business goal is to promote NoDoubt Fitness through a genuinely useful free product rather than a sales-first funnel. The most important product tension is preserving timer utility while still making the app feel unmistakably like an official NoDoubt Fitness experience.
 
-The codebase map confirms there is not yet any application source tree, runtime entry point, timer engine, auth implementation, or Supabase integration. This means initial planning should treat the project as a pre-implementation build with strong product direction already established, not as an existing app that needs incremental feature work.
+The codebase map confirms there is not yet any application source tree, runtime entry point, timer engine, auth implementation, or production Neon integration. This means initial planning should treat the project as a pre-implementation build with strong product direction already established, not as an existing app that needs incremental feature work.
 
 ## Constraints
 
 - **Hosting**: Vercel free tier - deployment and architecture should stay lightweight and low-ops.
-- **Persistence**: Supabase free tier - database and auth design should fit hosted constraints without requiring a custom backend.
-- **Authentication**: Supabase Auth with Google only for MVP - sign-in scope is intentionally narrow.
+- **Persistence**: Neon free tier - database and auth design should fit hosted constraints without requiring a custom backend.
+- **Authentication**: Neon Auth with Google only for MVP - sign-in scope is intentionally narrow.
 - **Platform**: Mobile-first web/PWA - UX and technical choices must respect browser limitations around background execution, audio, and wake behavior.
-- **Architecture**: Minimal backend surface area - prefer direct client-to-Supabase patterns plus only small serverless logic if strictly necessary.
+- **Architecture**: Minimal backend surface area - prefer direct client-to-Neon Data API patterns plus only small serverless logic if strictly necessary.
 - **Product scope**: MVP should emphasize quick setup, reliable run mode, and branded starter templates before broader feature parity with native benchmarks.
 
 ## Key Decisions
@@ -53,7 +53,7 @@ The codebase map confirms there is not yet any application source tree, runtime 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
 | Build the first release as a mobile-first web app and PWA | Matches the product goal and delivery constraints while maximizing reach | - Pending |
-| Use Supabase for auth and persistence | Keeps the stack simple and aligned with the documented MVP constraints | - Pending |
+| Use Neon + Neon Auth for auth and persistence | Keeps the stack simple and aligned with free-tier MVP constraints after the platform pivot | - Pending |
 | Use Google as the only MVP sign-in provider | Reduces auth complexity while supporting save-and-return behavior | - Pending |
 | Keep guests unblocked for trying templates and temporary timers | Supports fast value and reduces friction before account creation | - Pending |
 | Make NoDoubt branding strong in shell/onboarding but minimal during active runs | Preserves timer readability while still serving the business objective | - Pending |

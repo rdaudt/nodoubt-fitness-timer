@@ -1,8 +1,8 @@
 import {
   createServer,
-  getSupabaseEnv,
+  getNeonEnv,
   isAuthTestMode,
-} from "../../../../lib/supabase/server";
+} from "../../../../lib/neon/server";
 import type { SignedInAuthContext } from "../../auth/server/get-auth-context";
 import type { TimerIntervalBlock, TimerRecordInput } from "../../timers/contracts/timer-record";
 import {
@@ -349,13 +349,13 @@ export async function createSignedInDraftFromInput(
     };
   }
 
-  if (!getSupabaseEnv()) {
-    throw new Error("Signed-in timer creation requires auth test mode or Supabase.");
+  if (!getNeonEnv()) {
+    throw new Error("Signed-in timer creation requires auth test mode or database.");
   }
 
-  const supabase = await createServer();
+  const database = await createServer();
   const insert = buildPersonalTimerInsert({ userId: auth.userId }, input);
-  const { data, error } = await supabase
+  const { data, error } = await database
     .from("personal_timers")
     .insert(insert)
     .select("id")
@@ -370,3 +370,4 @@ export async function createSignedInDraftFromInput(
     notice: `${input.name} created as a draft.`,
   };
 }
+

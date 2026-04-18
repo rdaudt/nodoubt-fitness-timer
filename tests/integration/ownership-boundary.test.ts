@@ -14,9 +14,9 @@ import {
 
 const migrationPath = resolve(
   process.cwd(),
-  "supabase/migrations/202604150001_phase1_foundation.sql",
+  "neon/migrations/202604150001_phase1_foundation.sql",
 );
-const seedPath = resolve(process.cwd(), "supabase/seed.sql");
+const seedPath = resolve(process.cwd(), "neon/seed.sql");
 
 const migrationSql = readFileSync(migrationPath, "utf8");
 const seedSql = readFileSync(seedPath, "utf8");
@@ -44,6 +44,7 @@ describe("ownership-boundary", () => {
     expect(OFFICIAL_TEMPLATE_DUPLICATION_RULE).toBe("duplicate-before-edit");
     expect(migrationSql).toContain("create table if not exists public.official_templates");
     expect(migrationSql).toContain("create table if not exists public.personal_timers");
+    expect(migrationSql).not.toContain("references auth.users");
   });
 
   it("enables row level security and authenticated owner policies for private timers", () => {
@@ -54,19 +55,19 @@ describe("ownership-boundary", () => {
       "alter table public.personal_timers force row level security;",
     );
     expect(migrationSql).toMatch(
-      /create policy "personal timers are owner readable"[\s\S]*to authenticated[\s\S]*auth\.uid\(\)\)\s*=\s*owner_id/i,
+      /create policy "personal timers are owner readable"[\s\S]*to authenticated[\s\S]*auth\.user_id\(\)\)\s*=\s*owner_id/i,
     );
     expect(migrationSql).toMatch(
-      /create policy "personal timers are owner insertable"[\s\S]*to authenticated[\s\S]*auth\.uid\(\)\)\s*=\s*owner_id/i,
+      /create policy "personal timers are owner insertable"[\s\S]*to authenticated[\s\S]*auth\.user_id\(\)\)\s*=\s*owner_id/i,
     );
     expect(migrationSql).toMatch(
-      /create policy "personal timers are owner updatable"[\s\S]*with check \(\(select auth\.uid\(\)\) = owner_id\)/i,
+      /create policy "personal timers are owner updatable"[\s\S]*with check \(\(select auth\.user_id\(\)\) = owner_id\)/i,
     );
     expect(migrationSql).toContain(
       "grant select, insert, update, delete on public.personal_timers to authenticated;",
     );
     expect(migrationSql).not.toContain(
-      'create policy "personal timers are owner readable"\non public.personal_timers\nfor select\nto anon',
+      'create policy "personal timers are owner readable"\non public.personal_timers\nfor select\nto anonymous',
     );
   });
 

@@ -18,8 +18,10 @@ export default defineConfig({
     timeout: 120_000,
     env: {
       AUTH_TEST_MODE: "1",
-      NEXT_PUBLIC_SUPABASE_URL: "https://example.supabase.co",
-      NEXT_PUBLIC_SUPABASE_ANON_KEY: "test-anon-key",
+      NEXT_PUBLIC_NEON_DATA_API_URL: "https://example-data-api.aws.neon.tech/rest/v1",
+      NEXT_PUBLIC_NEON_AUTH_URL: "https://example.neonauth.us-east-1.aws.neon.tech",
+      NEON_AUTH_BASE_URL: "https://example.neonauth.us-east-1.aws.neon.tech",
+      NEON_AUTH_COOKIE_SECRET: "0123456789abcdef0123456789abcdef",
       NEXT_TELEMETRY_DISABLED: "1",
     },
   },

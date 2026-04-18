@@ -1,8 +1,8 @@
 import {
   createServer,
-  getSupabaseEnv,
+  getNeonEnv,
   isAuthTestMode,
-} from "../../../../lib/supabase/server";
+} from "../../../../lib/neon/server";
 import type {
   AuthContext,
   SignedInAuthContext,
@@ -117,15 +117,15 @@ async function defaultLoadPersonalTimers(
     }));
   }
 
-  if (!getSupabaseEnv()) {
+  if (!getNeonEnv()) {
     return [];
   }
 
   try {
-    const supabase = await createServer();
+    const database = await createServer();
     const spec = listPersonalTimersSpec({ userId: authContext.userId });
 
-    let query = supabase.from(spec.table).select(personalTimerSelect);
+    let query = database.from(spec.table).select(personalTimerSelect);
 
     for (const filter of spec.filters) {
       query = query.eq(filter.column, filter.value);
@@ -281,3 +281,4 @@ export async function getLibraryViewModel(
       : "Duplicate an official template or create a timer from scratch to start building your library.",
   };
 }
+

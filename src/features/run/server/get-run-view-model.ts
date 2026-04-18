@@ -1,8 +1,8 @@
 import {
   createServer,
-  getSupabaseEnv,
+  getNeonEnv,
   isAuthTestMode,
-} from "../../../../lib/supabase/server";
+} from "../../../../lib/neon/server";
 import { decodeGuestTimerSeed } from "../../create/server/create-timer-from-preset";
 import type {
   AuthContext,
@@ -77,15 +77,15 @@ async function defaultLoadPersonalTimer(
     return row ? mapPersonalTimerRow(row) : null;
   }
 
-  if (!getSupabaseEnv()) {
+  if (!getNeonEnv()) {
     return null;
   }
 
   try {
-    const supabase = await createServer();
+    const database = await createServer();
     const spec = listPersonalTimersSpec({ userId: authContext.userId });
 
-    let query = supabase.from(spec.table).select(personalTimerSelect);
+    let query = database.from(spec.table).select(personalTimerSelect);
 
     for (const filter of spec.filters) {
       query = query.eq(filter.column, filter.value);
@@ -106,17 +106,17 @@ async function defaultLoadPersonalTimer(
 async function defaultLoadOfficialTemplate(
   slug: string,
 ): Promise<OfficialTemplateRecord | null> {
-  if (isAuthTestMode() || !getSupabaseEnv()) {
+  if (isAuthTestMode() || !getNeonEnv()) {
     const row = getMockOfficialTemplateRowBySlug(slug);
 
     return row ? mapOfficialTemplateRow(row) : null;
   }
 
   try {
-    const supabase = await createServer();
+    const database = await createServer();
     const spec = getOfficialTemplateBySlugSpec(slug);
 
-    let query = supabase.from(spec.table).select(officialTemplateSelect);
+    let query = database.from(spec.table).select(officialTemplateSelect);
 
     for (const filter of spec.filters) {
       query = query.eq(filter.column, filter.value);

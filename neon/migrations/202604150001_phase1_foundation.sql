@@ -1,3 +1,4 @@
+create extension if not exists pg_session_jwt;
 create extension if not exists pgcrypto;
 
 create or replace function public.set_updated_at()
@@ -11,7 +12,7 @@ end;
 $$;
 
 create table if not exists public.profiles (
-  id uuid primary key references auth.users (id) on delete cascade,
+  id uuid primary key,
   first_name text,
   avatar_url text,
   created_at timestamptz not null default timezone('utc', now()),
@@ -39,7 +40,7 @@ create table if not exists public.official_templates (
 
 create table if not exists public.personal_timers (
   id uuid primary key default gen_random_uuid(),
-  owner_id uuid not null references auth.users (id) on delete cascade,
+  owner_id uuid not null,
   name text not null,
   description text,
   is_draft boolean not null default true,
@@ -84,11 +85,13 @@ alter table public.official_templates enable row level security;
 alter table public.personal_timers enable row level security;
 alter table public.personal_timers force row level security;
 
-revoke all on public.profiles from anon, authenticated;
-revoke all on public.official_templates from anon, authenticated;
-revoke all on public.personal_timers from anon, authenticated;
+grant usage on schema public to authenticated, anonymous;
 
-grant select on public.official_templates to anon, authenticated;
+revoke all on public.profiles from authenticated, anonymous;
+revoke all on public.official_templates from authenticated, anonymous;
+revoke all on public.personal_timers from authenticated, anonymous;
+
+grant select on public.official_templates to authenticated, anonymous;
 grant select, insert, update, delete on public.profiles to authenticated;
 grant select, insert, update, delete on public.personal_timers to authenticated;
 
@@ -96,7 +99,7 @@ drop policy if exists "official templates are public read only" on public.offici
 create policy "official templates are public read only"
 on public.official_templates
 for select
-to anon, authenticated
+to authenticated, anonymous
 using (is_published = true);
 
 drop policy if exists "profiles are owner readable" on public.profiles;
@@ -104,55 +107,55 @@ create policy "profiles are owner readable"
 on public.profiles
 for select
 to authenticated
-using ((select auth.uid()) = id);
+using ((select auth.user_id()) = id);
 
 drop policy if exists "profiles are owner insertable" on public.profiles;
 create policy "profiles are owner insertable"
 on public.profiles
 for insert
 to authenticated
-with check ((select auth.uid()) = id);
+with check ((select auth.user_id()) = id);
 
 drop policy if exists "profiles are owner updatable" on public.profiles;
 create policy "profiles are owner updatable"
 on public.profiles
 for update
 to authenticated
-using ((select auth.uid()) = id)
-with check ((select auth.uid()) = id);
+using ((select auth.user_id()) = id)
+with check ((select auth.user_id()) = id);
 
 drop policy if exists "profiles are owner deletable" on public.profiles;
 create policy "profiles are owner deletable"
 on public.profiles
 for delete
 to authenticated
-using ((select auth.uid()) = id);
+using ((select auth.user_id()) = id);
 
 drop policy if exists "personal timers are owner readable" on public.personal_timers;
 create policy "personal timers are owner readable"
 on public.personal_timers
 for select
 to authenticated
-using ((select auth.uid()) = owner_id);
+using ((select auth.user_id()) = owner_id);
 
 drop policy if exists "personal timers are owner insertable" on public.personal_timers;
 create policy "personal timers are owner insertable"
 on public.personal_timers
 for insert
 to authenticated
-with check ((select auth.uid()) = owner_id);
+with check ((select auth.user_id()) = owner_id);
 
 drop policy if exists "personal timers are owner updatable" on public.personal_timers;
 create policy "personal timers are owner updatable"
 on public.personal_timers
 for update
 to authenticated
-using ((select auth.uid()) = owner_id)
-with check ((select auth.uid()) = owner_id);
+using ((select auth.user_id()) = owner_id)
+with check ((select auth.user_id()) = owner_id);
 
 drop policy if exists "personal timers are owner deletable" on public.personal_timers;
 create policy "personal timers are owner deletable"
 on public.personal_timers
 for delete
 to authenticated
-using ((select auth.uid()) = owner_id);
+using ((select auth.user_id()) = owner_id);

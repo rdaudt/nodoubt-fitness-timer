@@ -1,8 +1,8 @@
 import {
   createServer,
-  getSupabaseEnv,
+  getNeonEnv,
   isAuthTestMode,
-} from "../../../../lib/supabase/server";
+} from "../../../../lib/neon/server";
 import type { SignedInAuthContext } from "../../auth/server/get-auth-context";
 import type { TimerIntervalBlock } from "../../timers/contracts/timer-record";
 import {
@@ -112,11 +112,11 @@ export async function saveEditorDraft(
     };
   }
 
-  if (!getSupabaseEnv()) {
-    throw new Error("Draft saving requires auth test mode or Supabase configuration.");
+  if (!getNeonEnv()) {
+    throw new Error("Draft saving requires auth test mode or database configuration.");
   }
 
-  const supabase = await createServer();
+  const database = await createServer();
   const payload = {
     name: name || "Untitled Timer",
     description: description || null,
@@ -124,7 +124,7 @@ export async function saveEditorDraft(
     intervals,
     total_seconds: totalSeconds,
   };
-  const { data, error } = await supabase
+  const { data, error } = await database
     .from("personal_timers")
     .update(payload)
     .eq("id", timerId)
@@ -141,3 +141,4 @@ export async function saveEditorDraft(
     savedAt: String(data.updated_at),
   };
 }
+
