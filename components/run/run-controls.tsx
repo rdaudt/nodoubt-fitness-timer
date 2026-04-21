@@ -4,6 +4,7 @@ interface RunControlsProps {
   isRunning: boolean;
   controlsLocked: boolean;
   resetConfirming: boolean;
+  exitConfirming: boolean;
   canJumpPrevious: boolean;
   canJumpNext: boolean;
   onPauseResume: () => void;
@@ -12,6 +13,9 @@ interface RunControlsProps {
   onResetRequest: () => void;
   onResetCancel: () => void;
   onResetConfirm: () => void;
+  onExitRequest: () => void;
+  onExitCancel: () => void;
+  onExitConfirm: () => void;
   onToggleLock: () => void;
 }
 
@@ -19,6 +23,7 @@ export function RunControls({
   isRunning,
   controlsLocked,
   resetConfirming,
+  exitConfirming,
   canJumpPrevious,
   canJumpNext,
   onPauseResume,
@@ -27,6 +32,9 @@ export function RunControls({
   onResetRequest,
   onResetCancel,
   onResetConfirm,
+  onExitRequest,
+  onExitCancel,
+  onExitConfirm,
   onToggleLock,
 }: RunControlsProps) {
   const disablePlaybackButtons = controlsLocked;
@@ -117,6 +125,57 @@ export function RunControls({
           </button>
         </div>
       ) : null}
+      {exitConfirming ? (
+        <div
+          data-testid="run-exit-confirm"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "minmax(0, 1fr) auto auto",
+            gap: "0.5rem",
+            alignItems: "center",
+            borderRadius: "0.9rem",
+            padding: "0.55rem 0.65rem",
+            backgroundColor: "rgba(255, 244, 238, 0.16)",
+          }}
+        >
+          <p style={{ margin: 0, fontWeight: 600, color: "#fff4ee" }}>
+            Exit this run?
+          </p>
+          <button
+            type="button"
+            data-testid="run-control-exit-cancel"
+            onClick={onExitCancel}
+            style={inlineButtonStyle(false)}
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            data-testid="run-control-exit-confirm"
+            onClick={onExitConfirm}
+            style={inlineButtonStyle(true)}
+          >
+            Confirm
+          </button>
+        </div>
+      ) : null}
+      <button
+        type="button"
+        data-testid="run-control-exit"
+        onClick={onExitRequest}
+        disabled={disablePlaybackButtons}
+        style={{
+          border: "1px solid rgba(255, 244, 238, 0.24)",
+          borderRadius: "0.95rem",
+          padding: "0.75rem",
+          fontWeight: 700,
+          backgroundColor: "rgba(255, 244, 238, 0.06)",
+          color: "#fff4ee",
+          opacity: disablePlaybackButtons ? 0.45 : 1,
+        }}
+      >
+        Exit run
+      </button>
       <button
         type="button"
         data-testid={controlsLocked ? "run-control-unlock" : "run-control-lock"}

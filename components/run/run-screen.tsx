@@ -71,6 +71,7 @@ export function RunScreen({ sequence, notice }: RunScreenProps) {
   const [sessionReady, setSessionReady] = useState(false);
   const [controlsLocked, setControlsLocked] = useState(false);
   const [resetConfirming, setResetConfirming] = useState(false);
+  const [exitConfirming, setExitConfirming] = useState(false);
   const [runInactive, setRunInactive] = useState(false);
   const [feedbackPrimed, setFeedbackPrimed] = useState(false);
   const [capabilityNoticeReady, setCapabilityNoticeReady] = useState(false);
@@ -129,6 +130,7 @@ export function RunScreen({ sequence, notice }: RunScreenProps) {
     if (engine.frame.state === "completed") {
       setControlsLocked(false);
       setResetConfirming(false);
+      setExitConfirming(false);
       setRunInactive(true);
     }
   }, [engine.frame.state]);
@@ -142,6 +144,9 @@ export function RunScreen({ sequence, notice }: RunScreenProps) {
   }, [engine.frame.currentInterval, sequence.intervals.length]);
 
   const handlePauseResume = () => {
+    setResetConfirming(false);
+    setExitConfirming(false);
+
     if (engine.session.status === "running") {
       engine.pause();
       return;
@@ -153,11 +158,21 @@ export function RunScreen({ sequence, notice }: RunScreenProps) {
 
   const handleResetConfirm = () => {
     setResetConfirming(false);
+    setExitConfirming(false);
     setRunInactive(true);
     engine.reset();
     engine.pause();
     clearRunSessionSnapshot();
     clearActiveRunCookie();
+  };
+
+  const handleExitConfirm = () => {
+    setResetConfirming(false);
+    setExitConfirming(false);
+    setRunInactive(true);
+    clearRunSessionSnapshot();
+    clearActiveRunCookie();
+    router.push("/");
   };
 
   if (engine.frame.state === "completed") {
@@ -312,22 +327,37 @@ export function RunScreen({ sequence, notice }: RunScreenProps) {
         isRunning={engine.session.status === "running"}
         controlsLocked={controlsLocked}
         resetConfirming={resetConfirming}
+        exitConfirming={exitConfirming}
         canJumpPrevious={engine.frame.elapsedMs > 0}
         canJumpNext={engine.frame.totalRemainingMs > 0}
         onPauseResume={handlePauseResume}
         onPrevious={() => {
+          setResetConfirming(false);
+          setExitConfirming(false);
           setRunInactive(false);
           engine.previous();
         }}
         onNext={() => {
+          setResetConfirming(false);
+          setExitConfirming(false);
           setRunInactive(false);
           engine.next();
         }}
-        onResetRequest={() => setResetConfirming(true)}
+        onResetRequest={() => {
+          setExitConfirming(false);
+          setResetConfirming(true);
+        }}
         onResetCancel={() => setResetConfirming(false)}
         onResetConfirm={handleResetConfirm}
+        onExitRequest={() => {
+          setResetConfirming(false);
+          setExitConfirming(true);
+        }}
+        onExitCancel={() => setExitConfirming(false)}
+        onExitConfirm={handleExitConfirm}
         onToggleLock={() => {
           setResetConfirming(false);
+          setExitConfirming(false);
           setControlsLocked((current) => !current);
         }}
       />

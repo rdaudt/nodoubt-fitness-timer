@@ -64,6 +64,9 @@ test.describe("phase3-run-controls", () => {
     await page.getByTestId("home-run-now-timer-monday-burn").click();
     await expect(page).toHaveURL(/\/run\?timerId=timer-monday-burn/);
     await expect(page.getByTestId("run-screen")).toBeVisible();
+    await page.getByTestId("run-control-exit").click();
+    await expect(page.getByTestId("run-exit-confirm")).toBeVisible();
+    await page.getByTestId("run-control-exit-cancel").click();
 
     await page.getByTestId("run-control-lock").click();
     await expect(page.getByTestId("run-control-next")).toBeDisabled();
@@ -99,6 +102,23 @@ test.describe("phase3-run-controls", () => {
 
     await jumpUntilComplete(page);
     await page.getByTestId("run-completion-home").click();
+    await expect(page).toHaveURL(/\/$/);
+    await expect(page.getByTestId("home-screen")).toBeVisible();
+  });
+
+  test("active run can be exited before completion", async ({ page, baseURL }) => {
+    await signInWithMockSession(baseURL, page);
+
+    await page.goto("/");
+    await expect(page.getByTestId("home-screen")).toBeVisible();
+    await page.getByTestId("home-run-now-timer-monday-burn").click();
+    await expect(page).toHaveURL(/\/run\?timerId=timer-monday-burn/);
+    await expect(page.getByTestId("run-screen")).toBeVisible();
+
+    await page.getByTestId("run-control-exit").click();
+    await expect(page.getByTestId("run-exit-confirm")).toBeVisible();
+    await page.getByTestId("run-control-exit-confirm").click();
+
     await expect(page).toHaveURL(/\/$/);
     await expect(page.getByTestId("home-screen")).toBeVisible();
   });
