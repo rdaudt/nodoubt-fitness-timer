@@ -15,15 +15,13 @@ export function GoogleSignInButton() {
       const neonAuth = createBrowser();
       const redirectTo = new URL("/", window.location.origin);
 
-      const { error } = await neonAuth.signInWithOAuth({
+      const { error } = await neonAuth.signIn.social({
         provider: "google",
-        options: {
-          redirectTo: redirectTo.toString(),
-        },
+        callbackURL: redirectTo.toString(),
       });
 
       if (error) {
-        setErrorMessage(error.message);
+        setErrorMessage(error.message ?? "Unable to start Google sign-in.");
       }
     } catch (error) {
       setErrorMessage(

@@ -21,6 +21,16 @@ export async function updateSession(request: NextRequest) {
   }
 
   const auth = await getNeonAuthServer();
+  const hasSessionVerifier = request.nextUrl.searchParams.has(
+    "neon_auth_session_verifier",
+  );
+
+  if (hasSessionVerifier) {
+    // The verifier query param is returned from OAuth and must be processed
+    // through Neon middleware so session cookies are written for this origin.
+    return (await auth.middleware()(request)) as NextResponse;
+  }
+
   await auth.getSession();
 
   return NextResponse.next({
