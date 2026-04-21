@@ -1,5 +1,4 @@
-import { createAuthClient } from "@neondatabase/auth";
-import { SupabaseAuthAdapter } from "@neondatabase/auth/vanilla/adapters";
+import { createAuthClient } from "@neondatabase/auth/next";
 
 function readPublicNeonEnv() {
   const authUrl = process.env.NEXT_PUBLIC_NEON_AUTH_URL?.trim();
@@ -22,7 +21,5 @@ export function createBrowser() {
     throw new Error("Missing NEXT_PUBLIC_NEON_AUTH_URL.");
   }
 
-  return createAuthClient(env.authUrl, {
-    adapter: SupabaseAuthAdapter(),
-  });
+  return createAuthClient();
 }
